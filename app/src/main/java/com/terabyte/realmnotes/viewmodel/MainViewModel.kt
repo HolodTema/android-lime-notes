@@ -14,6 +14,10 @@ class MainViewModel: ViewModel() {
     val liveDataNavViewExpanded: LiveData<Boolean> = _liveDataNavViewExpanded
 
 
+    fun setFragmentMenuItemId(menuItemId: Int) {
+        _liveDataFragmentMenuItemId.value = menuItemId
+    }
+
     fun setNavViewExpanded(isExpanded: Boolean) {
         _liveDataNavViewExpanded.value = isExpanded
     }

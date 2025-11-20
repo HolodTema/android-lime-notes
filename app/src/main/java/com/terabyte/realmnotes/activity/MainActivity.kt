@@ -30,20 +30,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
     }
 
     override fun onStart() {
         super.onStart()
 
         binding.navigationViewMain.setNavigationItemSelectedListener { menuItem ->
-            if (menuItem.itemId == viewModel.liveDataFragmentMenuItemId.value) {
-                false
-            }
-            setFragment(menuItem.itemId)
+            viewModel.setFragmentMenuItemId(menuItem.itemId)
             viewModel.setNavViewExpanded(false)
             true
         }
+
 
         binding.toolbar.setNavigationOnClickListener {
             val isExpanded = viewModel.liveDataNavViewExpanded.value ?: false
@@ -52,6 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.liveDataFragmentMenuItemId.observe(this) { menuItemId ->
             setFragment(menuItemId)
+            setToolbarHeader(menuItemId)
         }
 
         viewModel.liveDataNavViewExpanded.observe(this) { isExpanded ->
@@ -93,21 +91,20 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-    private fun expandNavView() {
-        makeShortToast("expand nav view")
-        val layoutParams = binding.navigationViewMain.layoutParams as DrawerLayout.LayoutParams
-        layoutParams.width = resources.getDimensionPixelSize(R.dimen.nav_view_main_width_expanded)
-        binding.navigationViewMain.layoutParams = layoutParams
-    }
-
-    private fun compactNavView() {
-        makeShortToast("compact nav view")
-        val layoutParams = binding.navigationViewMain.layoutParams as DrawerLayout.LayoutParams
-        layoutParams.width = resources.getDimensionPixelSize(R.dimen.nav_view_main_width_compact)
-        binding.navigationViewMain.layoutParams = layoutParams
-
-        //hide menu, make visible icons only
-        binding.navigationViewMain.menu.setGroupVisible(R.id.menu_group_nav_view_main, true)
-
+    private fun setToolbarHeader(menuItemId: Int) {
+        binding.toolbar.title = when(menuItemId) {
+            R.id.menu_item_note_list -> {
+                getString(R.string.notes)
+            }
+            R.id.menu_item_category_list -> {
+                getString(R.string.categories)
+            }
+            R.id.menu_item_settings -> {
+                getString(R.string.settings)
+            }
+            else -> {
+                getString(R.string.notes)
+            }
+        }
     }
 }

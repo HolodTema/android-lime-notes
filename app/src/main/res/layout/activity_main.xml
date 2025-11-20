@@ -17,6 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:titleTextColor="@color/white"
             android:background="?attr/colorPrimary" />
 
         <FrameLayout
@@ -33,7 +34,6 @@
         android:layout_height="match_parent"
         app:headerLayout="@layout/nav_view_main_header"
         android:layout_gravity="start"
-        app:itemHorizontalPadding="16dp"
         app:menu="@menu/menu_main_navigation_layout" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -1,22 +1,20 @@
 package com.terabyte.realmnotes.activity
 
 import android.os.Bundle
-import android.view.MenuItem
-import androidx.activity.enableEdgeToEdge
-import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.terabyte.realmnotes.R
 import com.terabyte.realmnotes.databinding.ActivityMainBinding
 import com.terabyte.realmnotes.fragment.CategoryListFragment
 import com.terabyte.realmnotes.fragment.NoteListFragment
 import com.terabyte.realmnotes.fragment.SettingsFragment
-import com.terabyte.realmnotes.util.makeShortToast
+import com.terabyte.realmnotes.viewmodel.MainFragmentState
 import com.terabyte.realmnotes.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -30,80 +28,98 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.stateFlowMainFragment.collect {
+                    setFragment(it)
+                    setToolbarHeader(it)
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.stateFlowNavViewExpanded.collect { isExpanded ->
+                    if (isExpanded) {
+                        binding.drawerMain.openDrawer(GravityCompat.START)
+                    } else {
+                        binding.drawerMain.closeDrawer(GravityCompat.START)
+                    }
+                }
+            }
+        }
     }
 
     override fun onStart() {
         super.onStart()
 
         binding.navigationViewMain.setNavigationItemSelectedListener { menuItem ->
-            viewModel.setFragmentMenuItemId(menuItem.itemId)
-            viewModel.setNavViewExpanded(false)
+            val mainFragmentState = when (menuItem.itemId) {
+                R.id.menu_item_note_list -> {
+                    MainFragmentState.FRAGMENT_NOTE_LIST
+                }
+
+                R.id.menu_item_category_list -> {
+                    MainFragmentState.FRAGMENT_CATEGORY_LIST
+                }
+
+                R.id.menu_item_settings -> {
+                    MainFragmentState.FRAGMENT_SETTINGS
+                }
+
+                else -> {
+                    MainFragmentState.FRAGMENT_NOTE_LIST
+                }
+            }
+            viewModel.setMainFragmentState(mainFragmentState)
+            viewModel.inverseNavViewExpanded()
             true
         }
 
-
         binding.toolbar.setNavigationOnClickListener {
-            val isExpanded = viewModel.liveDataNavViewExpanded.value ?: false
-            viewModel.setNavViewExpanded(!isExpanded)
-        }
-
-        viewModel.liveDataFragmentMenuItemId.observe(this) { menuItemId ->
-            setFragment(menuItemId)
-            setToolbarHeader(menuItemId)
-        }
-
-        viewModel.liveDataNavViewExpanded.observe(this) { isExpanded ->
-            if (isExpanded) {
-                binding.drawerMain.openDrawer(GravityCompat.START)
-            }
-            else {
-                binding.drawerMain.closeDrawer(GravityCompat.START)
-            }
+            viewModel.inverseNavViewExpanded()
         }
     }
 
-    private fun setFragment(menuItemId: Int) {
+    private fun setFragment(mainFragmentState: MainFragmentState) {
         val isFragmentAlreadySet = supportFragmentManager
             .findFragmentById(R.id.frame_main_fragment_container) != null
 
-        val fragment = when(menuItemId) {
-            R.id.menu_item_note_list -> {
+        val fragment = when (mainFragmentState) {
+            MainFragmentState.FRAGMENT_NOTE_LIST -> {
                 NoteListFragment.newInstance()
             }
-            R.id.menu_item_category_list -> {
+
+            MainFragmentState.FRAGMENT_CATEGORY_LIST -> {
                 CategoryListFragment.newInstance()
             }
-            R.id.menu_item_settings -> {
+
+            MainFragmentState.FRAGMENT_SETTINGS -> {
                 SettingsFragment.newInstance()
-            }
-            else -> {
-                NoteListFragment.newInstance()
             }
         }
 
         val transaction = supportFragmentManager.beginTransaction()
         if (isFragmentAlreadySet) {
             transaction.replace(R.id.frame_main_fragment_container, fragment)
-        }
-        else {
+        } else {
             transaction.add(R.id.frame_main_fragment_container, fragment)
         }
         transaction.commit()
     }
 
-    private fun setToolbarHeader(menuItemId: Int) {
-        binding.toolbar.title = when(menuItemId) {
-            R.id.menu_item_note_list -> {
+    private fun setToolbarHeader(mainFragmentState: MainFragmentState) {
+        binding.toolbar.title = when (mainFragmentState) {
+            MainFragmentState.FRAGMENT_NOTE_LIST -> {
                 getString(R.string.notes)
             }
-            R.id.menu_item_category_list -> {
+
+            MainFragmentState.FRAGMENT_CATEGORY_LIST -> {
                 getString(R.string.categories)
             }
-            R.id.menu_item_settings -> {
+
+            MainFragmentState.FRAGMENT_SETTINGS -> {
                 getString(R.string.settings)
-            }
-            else -> {
-                getString(R.string.notes)
             }
         }
     }

@@ -40,8 +40,16 @@ class CategoryListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.stateFlowCategoryList.collect {
-                    adapter.submitList(it)
+                viewModel.stateFlowCategoryList.collect { categories ->
+                    adapter.submitList(categories)
+                    if (categories.isEmpty()) {
+                        binding.recyclerCategories.visibility = View.GONE
+                        binding.textNoCategories.visibility = View.VISIBLE
+                    }
+                    else {
+                        binding.recyclerCategories.visibility = View.VISIBLE
+                        binding.textNoCategories.visibility = View.GONE
+                    }
                 }
             }
         }

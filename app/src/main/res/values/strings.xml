@@ -14,4 +14,5 @@
     <string name="delete">delete</string>
     <string name="clear_note_text_filter">clear_note_text_filter</string>
     <string name="category">category</string>
+    <string name="add_your_first_category">Add your first category!</string>
 </resources>

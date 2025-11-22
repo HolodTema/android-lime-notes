@@ -6,6 +6,8 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -75,6 +77,7 @@ class NoteDetailsActivity : AppCompatActivity() {
             }
         }
 
+        setSupportActionBar(binding.toolbar)
         configureOnBackPressed()
     }
 
@@ -106,7 +109,23 @@ class NoteDetailsActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        binding.butt
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        if (viewModel.stateFlowNoteDetails.value == NoteDetailsState.UPDATE_NOTE) {
+            menuInflater.inflate(R.menu.menu_note_details_toolbar, menu)
+            return true
+        }
+        return false
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_item_delete_note) {
+            viewModel.deleteNote {
+                startActivity(MainActivity.newIntent(this))
+            }
+        }
+        return true
     }
 
     private fun configureOnBackPressed() {

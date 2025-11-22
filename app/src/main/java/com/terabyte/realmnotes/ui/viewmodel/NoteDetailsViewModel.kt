@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 enum class NoteDetailsState {
     ADD_NOTE,
@@ -59,6 +60,21 @@ class NoteDetailsViewModel(private val noteRepository: NoteRepository): ViewMode
 
             deferred.await()
             noteSavedListener()
+        }
+    }
+
+    fun deleteNote(noteDeletedListener: ()->Unit) {
+        val noteId = stateFlowNote.value.id
+        if (noteId == null) {
+            return
+        }
+
+        viewModelScope.launch {
+            val deferred = async(Dispatchers.IO) {
+                noteRepository.deleteNote(noteId)
+            }
+            deferred.await()
+            noteDeletedListener()
         }
     }
 

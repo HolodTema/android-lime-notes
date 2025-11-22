@@ -62,6 +62,12 @@ class NoteRepositoryImpl: NoteRepository {
         }
     }
 
+    override suspend fun deleteAllNotes() {
+        realm.write {
+            delete(NoteRealmObject::class)
+        }
+    }
+
     override fun close() {
         realm.close()
     }

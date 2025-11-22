@@ -12,6 +12,8 @@ interface NoteRepository {
 
     suspend fun deleteNote(noteId: String)
 
+    suspend fun deleteAllNotes()
+
     fun close()
 
 }

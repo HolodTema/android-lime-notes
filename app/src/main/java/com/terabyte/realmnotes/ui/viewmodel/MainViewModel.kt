@@ -43,6 +43,16 @@ class MainViewModel(private val noteRepository: NoteRepository): ViewModel() {
         _stateFlowNoteFilterText.value = text
     }
 
+    fun deleteAllNotes() {
+        viewModelScope.launch {
+            val deferred = async(Dispatchers.IO) {
+                noteRepository.deleteAllNotes()
+            }
+            deferred.await()
+            loadNotes()
+        }
+    }
+
     private fun loadNotes() {
         viewModelScope.launch {
             val deferred = async(Dispatchers.IO) {

@@ -5,13 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.terabyte.realmnotes.application.MyApplication
 import com.terabyte.realmnotes.databinding.FragmentSettingsBinding
+import com.terabyte.realmnotes.ui.viewmodel.MainViewModel
 import com.terabyte.realmnotes.ui.viewmodel.SettingsViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SettingsFragment : Fragment() {
@@ -22,6 +26,8 @@ class SettingsFragment : Fragment() {
         val factory = SettingsViewModel.Factory(application.dataStoreRepository)
         ViewModelProvider(this, factory)[SettingsViewModel::class]
     }
+
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,6 +50,10 @@ class SettingsFragment : Fragment() {
         super.onStart()
         binding.switchDarkTheme.setOnCheckedChangeListener { _, isChecked ->
             viewModel.saveIsDarkTheme(isChecked)
+        }
+
+        binding.buttonDeleteAllNotes.setOnClickListener {
+            mainViewModel.deleteAllNotes()
         }
     }
 

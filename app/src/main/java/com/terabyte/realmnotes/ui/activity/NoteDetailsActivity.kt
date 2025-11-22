@@ -105,6 +105,8 @@ class NoteDetailsActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {}
         })
+
+        binding.butt
     }
 
     private fun configureOnBackPressed() {

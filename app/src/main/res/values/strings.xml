@@ -11,4 +11,5 @@
     <string name="enter_note_text">Enter note text</string>
     <string name="note_details_header_insert">Create note</string>
     <string name="note_details_header_update">Edit note</string>
+    <string name="delete">delete</string>
 </resources>

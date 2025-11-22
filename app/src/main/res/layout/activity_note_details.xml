@@ -14,17 +14,29 @@
         android:background="?attr/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_back"
+        app:subtitleTextColor="@color/white"
         app:titleTextColor="@color/white"
         tools:subtitle="01.01.2026"
-        app:subtitleTextColor="@color/white"
-        tools:title="Create note" />
+        tools:title="Create note">
+
+        <ImageView
+            android:id="@+id/button_delete_note"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@string/delete"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/white" />
+
+    </androidx.appcompat.widget.Toolbar>
 
     <EditText
         android:id="@+id/edit_note_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:layout_margin="10dp"
         android:hint="@string/enter_note_text"
-        android:layout_margin="10dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

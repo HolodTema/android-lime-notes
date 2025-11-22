@@ -12,4 +12,5 @@
     <string name="note_details_header_insert">Create note</string>
     <string name="note_details_header_update">Edit note</string>
     <string name="delete">delete</string>
+    <string name="clear_note_text_filter">clear_note_text_filter</string>
 </resources>

@@ -35,8 +35,9 @@ class NoteListFragment: Fragment() {
         adapter = NoteAdapter(layoutInflater) { note ->
             startActivity(NoteDetailsActivity.newIntent(requireActivity(), note))
         }
-
         binding.recyclerNotes.adapter = adapter
+
+        binding.editSearchNote.setText(viewModel.stateFlowNoteFilterText.value)
 
         return binding.root
     }
@@ -47,14 +48,6 @@ class NoteListFragment: Fragment() {
                 viewModel.stateFlowNoteList.collect {
                     adapter.submitList(it)
                     binding.textAmountNotes.text = getString(R.string.amount_notes, it.size)
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.stateFlowNoteFilterText.collect { text ->
-                    binding.editSearchNote.setText(text)
                 }
             }
         }
@@ -74,6 +67,12 @@ class NoteListFragment: Fragment() {
                 count: Int
             ) {
                 viewModel.setNoteFilterText(s.toString())
+                binding.buttonClearFilterText.visibility = if (s.toString().isBlank()) {
+                    View.INVISIBLE
+                }
+                else {
+                    View.VISIBLE
+                }
             }
 
             override fun beforeTextChanged(
@@ -85,6 +84,11 @@ class NoteListFragment: Fragment() {
 
             override fun afterTextChanged(s: Editable?) { }
         })
+
+        binding.buttonClearFilterText.setOnClickListener {
+            binding.editSearchNote.setText("")
+            viewModel.setNoteFilterText("")
+        }
     }
 
     companion object {

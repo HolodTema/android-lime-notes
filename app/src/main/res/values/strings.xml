@@ -5,4 +5,8 @@
     <string name="settings">Settings</string>
     <string name="caption_settings_header">These settings will be saved DataStore</string>
     <string name="dark_theme">Dark theme</string>
+    <string name="search">search</string>
+    <string name="add">add</string>
+    <string name="amount_notes">Notes found: %d</string>
+    <string name="enter_note_text">Enter note text</string>
 </resources>

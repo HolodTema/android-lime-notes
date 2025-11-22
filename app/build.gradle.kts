@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.realm)
 }
 
 android {
@@ -39,6 +40,13 @@ android {
 }
 
 dependencies {
+    //for activityViewModels() delegate using
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.fragment.ktx)
+
+    //Realm
+    implementation(libs.realm.kotlin.base)
+
     //Preferences DataStore
     implementation(libs.androidx.datastore.preferences)
 

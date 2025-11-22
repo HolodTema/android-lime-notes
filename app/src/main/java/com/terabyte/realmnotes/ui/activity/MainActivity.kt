@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.terabyte.realmnotes.R
+import com.terabyte.realmnotes.application.MyApplication
 import com.terabyte.realmnotes.databinding.ActivityMainBinding
 import com.terabyte.realmnotes.ui.fragment.CategoryListFragment
 import com.terabyte.realmnotes.ui.fragment.NoteListFragment
@@ -20,7 +21,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this)[MainViewModel::class.java]
+        val noteRepository = (application as MyApplication).noteRepository
+        val factory = MainViewModel.Factory(noteRepository)
+        ViewModelProvider(this, factory)[MainViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

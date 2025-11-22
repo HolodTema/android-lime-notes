@@ -1,5 +1,6 @@
 package com.terabyte.realmnotes.ui.recycler
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -32,7 +33,7 @@ class CategoryHolder(
 
     fun bind(category: Category) {
         binding.textCategoryName.text = category.name
-//        binding.imageCategoryIcon.tint
+        binding.imageCategoryIcon.imageTintList = ColorStateList.valueOf(category.color)
 
         binding.root.setOnClickListener {
             categorySelectedListener(category)

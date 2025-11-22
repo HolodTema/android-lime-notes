@@ -58,6 +58,16 @@ class MainViewModel(private val noteRepository: NoteRepository): ViewModel() {
         }
     }
 
+    fun deleteAllCategories() {
+        viewModelScope.launch {
+            val deferred = async(Dispatchers.IO) {
+                noteRepository.deleteAllCategories()
+            }
+            deferred.await()
+            loadCategories()
+        }
+    }
+
     private fun loadNotes() {
         viewModelScope.launch {
             val deferred = async(Dispatchers.IO) {

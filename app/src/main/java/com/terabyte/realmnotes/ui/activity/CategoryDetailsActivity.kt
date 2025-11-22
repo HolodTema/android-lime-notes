@@ -2,6 +2,7 @@ package com.terabyte.realmnotes.ui.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -19,11 +20,12 @@ import com.terabyte.realmnotes.R
 import com.terabyte.realmnotes.application.MyApplication
 import com.terabyte.realmnotes.databinding.ActivityCategoryDetailsBinding
 import com.terabyte.realmnotes.domain.model.Category
+import com.terabyte.realmnotes.ui.dialog.ChangeColorDialog
 import com.terabyte.realmnotes.ui.viewmodel.CategoryDetailsState
 import com.terabyte.realmnotes.ui.viewmodel.CategoryDetailsViewModel
 import kotlinx.coroutines.launch
 
-class CategoryDetailsActivity : AppCompatActivity() {
+class CategoryDetailsActivity : AppCompatActivity(), ChangeColorDialog.Callbacks {
     private lateinit var binding: ActivityCategoryDetailsBinding
 
     private val viewModel: CategoryDetailsViewModel by lazy {
@@ -68,6 +70,7 @@ class CategoryDetailsActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.stateFlowCategory.collect { category ->
                     binding.editCategoryName.setText(category.name)
+                    binding.imageCategoryIcon.imageTintList = ColorStateList.valueOf(category.color)
                 }
             }
         }
@@ -86,7 +89,9 @@ class CategoryDetailsActivity : AppCompatActivity() {
         }
 
         binding.buttonChangeColor.setOnClickListener {
-
+            val dialog = ChangeColorDialog()
+            dialog.setCallbacksImpl(this)
+            dialog.show(supportFragmentManager, DIALOG_TAG_CHANGE_COLOR)
         }
 
         binding.editCategoryName.addTextChangedListener(object: TextWatcher {
@@ -130,6 +135,11 @@ class CategoryDetailsActivity : AppCompatActivity() {
         return false
     }
 
+    override fun onColorSelected(color: Int) {
+        viewModel.updateCategoryColor(color)
+        binding.imageCategoryIcon.imageTintList = ColorStateList.valueOf(color)
+    }
+
     private fun configureOnBackPressed() {
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -143,6 +153,8 @@ class CategoryDetailsActivity : AppCompatActivity() {
 
 
     companion object {
+        const val DIALOG_TAG_CHANGE_COLOR = "ChangeColorDialog"
+
         const val INTENT_KEY_CATEGORY = "intentKeyCategory"
 
         fun newIntent(context: Context): Intent {

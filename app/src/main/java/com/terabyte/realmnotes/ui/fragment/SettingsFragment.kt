@@ -53,6 +53,10 @@ class SettingsFragment : Fragment() {
         binding.buttonDeleteAllNotes.setOnClickListener {
             mainViewModel.deleteAllNotes()
         }
+
+        binding.buttonDeleteAllCategories.setOnClickListener {
+            mainViewModel.deleteAllCategories()
+        }
     }
 
     companion object {

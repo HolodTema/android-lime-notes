@@ -20,4 +20,7 @@
     <string name="change_color">Change color</string>
     <string name="category_details_header_insert">Create category</string>
     <string name="category_details_header_update">Edit category</string>
+    <string name="delete_all_categories">Delete all categories</string>
+    <string name="delete_all_notes">Delete all notes</string>
+    <string name="done">Done</string>
 </resources>

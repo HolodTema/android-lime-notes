@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:columnCount="4"
+    android:padding="10dp"
+    android:layout_gravity="center"
+    android:rowCount="3">
+
+    <ImageView
+        android:id="@+id/image_gray"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/background_color_indicator"
+        android:backgroundTint="@color/gray"
+        android:foreground="@drawable/background_color_indicator" />
+
+    <ImageView
+        android:id="@+id/image_red"
+        android:layout_width="50dp"
+        android:layout_margin="5dp"
+        android:layout_height="50dp"
+        android:background="@drawable/background_color_indicator"
+        android:backgroundTint="@color/red"
+        android:foreground="@drawable/background_color_indicator" />
+
+    <ImageView
+        android:id="@+id/image_orange"
+        android:layout_width="50dp"
+        android:layout_margin="5dp"
+        android:layout_height="50dp"
+        android:background="@drawable/background_color_indicator"
+        android:backgroundTint="@color/orange"
+        android:foreground="@drawable/background_color_indicator" />
+
+    <ImageView
+        android:id="@+id/image_yellow"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/background_color_indicator"
+        android:backgroundTint="@color/yellow"
+        android:foreground="@drawable/background_color_indicator" />
+
+    <ImageView
+        android:id="@+id/image_green"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/background_color_indicator"
+        android:backgroundTint="@color/green"
+        android:foreground="@drawable/background_color_indicator" />
+
+    <ImageView
+        android:id="@+id/image_light_blue"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/background_color_indicator"
+        android:backgroundTint="@color/light_blue"
+        android:foreground="@drawable/background_color_indicator" />
+
+    <ImageView
+        android:id="@+id/image_blue"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/background_color_indicator"
+        android:backgroundTint="@color/blue"
+        android:foreground="@drawable/background_color_indicator" />
+
+    <ImageView
+        android:id="@+id/image_violet"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/background_color_indicator"
+        android:backgroundTint="@color/violet"
+        android:foreground="@drawable/background_color_indicator" />
+
+    <ImageView
+        android:id="@+id/image_pink"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/background_color_indicator"
+        android:backgroundTint="@color/pink"
+        android:foreground="@drawable/background_color_indicator" />
+
+    <ImageView
+        android:id="@+id/image_dark_green"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/background_color_indicator"
+        android:backgroundTint="@color/dark_green"
+        android:foreground="@drawable/background_color_indicator" />
+
+    <ImageView
+        android:id="@+id/image_cherry"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/background_color_indicator"
+        android:backgroundTint="@color/cherry"
+        android:foreground="@drawable/background_color_indicator" />
+
+    <ImageView
+        android:id="@+id/image_brown"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/background_color_indicator"
+        android:backgroundTint="@color/brown"
+        android:foreground="@drawable/background_color_indicator" />
+</GridLayout>
+
+

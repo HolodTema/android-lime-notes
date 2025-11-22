@@ -10,7 +10,7 @@ import java.util.Date
 class CategoryRealmObject : RealmObject {
     @PrimaryKey var id: ObjectId = ObjectId()
     var name: String = ""
-    var color: Int = 0x000000
+    var color: Int = 0x626262
 
     fun toCategory(): Category {
         return Category(

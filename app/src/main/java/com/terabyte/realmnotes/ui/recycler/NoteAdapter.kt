@@ -27,7 +27,7 @@ class NoteDiffUtilItemCallback : DiffUtil.ItemCallback<Note>() {
     }
 }
 
-class Holder(
+class NoteHolder(
     private val binding: ListItemNoteBinding,
     private val noteSelectedListener: (Note) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -47,18 +47,18 @@ class NoteAdapter(
     private val inflater: LayoutInflater,
     private val noteSelectedListener: (Note) -> Unit
 ) :
-    ListAdapter<Note, Holder>(NoteDiffUtilItemCallback()) {
+    ListAdapter<Note, NoteHolder>(NoteDiffUtilItemCallback()) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): Holder {
+    ): NoteHolder {
         val binding = ListItemNoteBinding.inflate(inflater, parent, false)
-        return Holder(binding, noteSelectedListener)
+        return NoteHolder(binding, noteSelectedListener)
     }
 
     override fun onBindViewHolder(
-        holder: Holder,
+        holder: NoteHolder,
         position: Int
     ) {
         holder.bind(getItem(position))

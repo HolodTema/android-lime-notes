@@ -1,5 +1,6 @@
 package com.terabyte.realmnotes.domain.repository
 
+import com.terabyte.realmnotes.domain.model.Category
 import com.terabyte.realmnotes.domain.model.Note
 
 interface NoteRepository {
@@ -13,6 +14,16 @@ interface NoteRepository {
     suspend fun deleteNote(noteId: String)
 
     suspend fun deleteAllNotes()
+
+    suspend fun getAllCategories(): List<Category>
+
+    suspend fun addCategory(category: Category)
+
+    suspend fun updateCategory(category: Category)
+
+    suspend fun deleteCategory(categoryId: String)
+
+    suspend fun deleteAllCategories()
 
     fun close()
 

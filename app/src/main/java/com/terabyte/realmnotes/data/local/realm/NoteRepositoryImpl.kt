@@ -1,18 +1,16 @@
 package com.terabyte.realmnotes.data.local.realm
 
+import com.terabyte.realmnotes.domain.model.Category
 import com.terabyte.realmnotes.domain.model.Note
 import com.terabyte.realmnotes.domain.repository.NoteRepository
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.mongodb.kbson.ObjectId
 
 class NoteRepositoryImpl: NoteRepository {
     private val realmConfig = RealmConfiguration.Builder(
-        schema = setOf(NoteRealmObject::class)
+        schema = setOf(NoteRealmObject::class, CategoryRealmObject::class)
     )
         .deleteRealmIfMigrationNeeded() //for development
         .build()
@@ -65,6 +63,56 @@ class NoteRepositoryImpl: NoteRepository {
     override suspend fun deleteAllNotes() {
         realm.write {
             delete(NoteRealmObject::class)
+        }
+    }
+
+    override suspend fun getAllCategories(): List<Category> {
+        val categoryRealmObjList = realm.query<CategoryRealmObject>().find().toList()
+        return categoryRealmObjList.map {
+            it.toCategory()
+        }
+    }
+
+    override suspend fun addCategory(category: Category) {
+        realm.write {
+            copyToRealm(CategoryRealmObject.fromCategory(category))
+        }
+    }
+
+    override suspend fun updateCategory(category: Category) {
+        if (category.id == null) {
+            return
+        }
+
+        realm.write {
+            val objId = ObjectId(category.id)
+            val query = query(CategoryRealmObject::class, "id == $0", objId)
+            val categoryRealmObj = query.first().find()
+            ObjectId.invoke()
+
+            categoryRealmObj?.let {
+                findLatest(it)?.apply {
+                    name = category.name
+                    color = category.color
+                }
+            }
+        }
+    }
+
+    override suspend fun deleteCategory(categoryId: String) {
+        realm.write {
+            val query = realm.query(CategoryRealmObject::class, "id == $0", ObjectId(categoryId))
+            val categoryRealmObj = query.first().find()
+
+            categoryRealmObj?.let {
+                delete(it)
+            }
+        }
+    }
+
+    override suspend fun deleteAllCategories() {
+        realm.write {
+            delete(CategoryRealmObject::class)
         }
     }
 

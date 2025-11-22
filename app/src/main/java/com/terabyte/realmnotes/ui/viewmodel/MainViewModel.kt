@@ -3,6 +3,7 @@ package com.terabyte.realmnotes.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.terabyte.realmnotes.domain.model.Category
 import com.terabyte.realmnotes.domain.model.Note
 import com.terabyte.realmnotes.domain.repository.NoteRepository
 import kotlinx.coroutines.Dispatchers
@@ -30,8 +31,12 @@ class MainViewModel(private val noteRepository: NoteRepository): ViewModel() {
     private val _stateFlowNoteFilterText = MutableStateFlow<String>("")
     val stateFlowNoteFilterText: StateFlow<String> = _stateFlowNoteFilterText.asStateFlow()
 
+    private val _stateFlowCategoryList = MutableStateFlow<List<Category>>(emptyList())
+    val stateFlowCategoryList: StateFlow<List<Category>> = _stateFlowCategoryList.asStateFlow()
+
     init {
         loadNotes()
+        loadCategories()
         configureFilterNotesByText()
     }
 
@@ -60,6 +65,15 @@ class MainViewModel(private val noteRepository: NoteRepository): ViewModel() {
             }
             noteList = deferred.await()
             _stateFlowNoteList.value = noteList
+        }
+    }
+
+    private fun loadCategories() {
+        viewModelScope.launch {
+            val deferred = async(Dispatchers.IO) {
+                noteRepository.getAllCategories().sorted()
+            }
+            _stateFlowCategoryList.value = deferred.await()
         }
     }
 

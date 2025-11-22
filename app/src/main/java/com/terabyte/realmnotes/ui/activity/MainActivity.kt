@@ -39,18 +39,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.stateFlowNavViewExpanded.collect { isExpanded ->
-                    if (isExpanded) {
-                        binding.drawerMain.openDrawer(GravityCompat.START)
-                    } else {
-                        binding.drawerMain.closeDrawer(GravityCompat.START)
-                    }
-                }
-            }
-        }
     }
 
     override fun onStart() {
@@ -75,13 +63,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             viewModel.setMainFragmentState(mainFragmentState)
-            viewModel.inverseNavViewExpanded()
+            binding.drawerMain.closeDrawer(GravityCompat.START)
             true
         }
 
         binding.toolbar.setNavigationOnClickListener {
-            viewModel.inverseNavViewExpanded()
+            binding.drawerMain.openDrawer(GravityCompat.START)
         }
+
     }
 
     private fun setFragment(mainFragmentState: MainFragmentState) {

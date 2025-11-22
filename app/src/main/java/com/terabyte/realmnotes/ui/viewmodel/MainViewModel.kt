@@ -23,19 +23,11 @@ class MainViewModel(private val noteRepository: NoteRepository): ViewModel() {
     private val _stateFlowMainFragment = MutableStateFlow(MainFragmentState.FRAGMENT_NOTE_LIST)
     val stateFlowMainFragment: StateFlow<MainFragmentState> = _stateFlowMainFragment.asStateFlow()
 
-    private val _stateFlowNavViewExpanded = MutableStateFlow<Boolean>(false)
-    val stateFlowNavViewExpanded: StateFlow<Boolean> = _stateFlowNavViewExpanded.asStateFlow()
-
     private val _stateFlowNoteList = MutableStateFlow<List<Note>>(emptyList())
     val stateFlowNoteList: StateFlow<List<Note>> = _stateFlowNoteList
 
     init {
         loadNotes()
-    }
-
-    fun inverseNavViewExpanded() {
-        val isExpanded = _stateFlowNavViewExpanded.value
-        _stateFlowNavViewExpanded.value = !isExpanded
     }
 
     fun setMainFragmentState(mainFragmentState: MainFragmentState) {

@@ -39,6 +39,9 @@ android {
 }
 
 dependencies {
+    //Preferences DataStore
+    implementation(libs.androidx.datastore.preferences)
+
     //lifecycle repeatOnLifecycle() fun
     implementation(libs.androidx.lifecycle.runtime.ktx)
 

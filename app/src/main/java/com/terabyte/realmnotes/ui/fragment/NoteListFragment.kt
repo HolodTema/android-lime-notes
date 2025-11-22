@@ -1,4 +1,4 @@
-package com.terabyte.realmnotes.fragment
+package com.terabyte.realmnotes.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

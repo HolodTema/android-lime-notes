@@ -3,4 +3,6 @@
     <string name="notes">Notes</string>
     <string name="categories">Categories</string>
     <string name="settings">Settings</string>
+    <string name="caption_settings_header">These settings will be saved DataStore</string>
+    <string name="dark_theme">Dark theme</string>
 </resources>

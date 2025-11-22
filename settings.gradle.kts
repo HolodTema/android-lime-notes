@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "RealmNotes"
 include(":app")
- 
+include(":domain")
+include(":data")

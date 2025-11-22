@@ -1,4 +1,4 @@
-package com.terabyte.realmnotes.activity
+package com.terabyte.realmnotes.ui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -9,11 +9,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.terabyte.realmnotes.R
 import com.terabyte.realmnotes.databinding.ActivityMainBinding
-import com.terabyte.realmnotes.fragment.CategoryListFragment
-import com.terabyte.realmnotes.fragment.NoteListFragment
-import com.terabyte.realmnotes.fragment.SettingsFragment
-import com.terabyte.realmnotes.viewmodel.MainFragmentState
-import com.terabyte.realmnotes.viewmodel.MainViewModel
+import com.terabyte.realmnotes.ui.fragment.CategoryListFragment
+import com.terabyte.realmnotes.ui.fragment.NoteListFragment
+import com.terabyte.realmnotes.ui.fragment.SettingsFragment
+import com.terabyte.realmnotes.ui.viewmodel.MainFragmentState
+import com.terabyte.realmnotes.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {

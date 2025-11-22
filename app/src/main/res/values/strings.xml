@@ -15,4 +15,9 @@
     <string name="clear_note_text_filter">clear_note_text_filter</string>
     <string name="category">category</string>
     <string name="add_your_first_category">Add your first category!</string>
+    <string name="enter_category_name">Enter category name</string>
+    <string name="name">Name:</string>
+    <string name="change_color">Change color</string>
+    <string name="category_details_header_insert">Create category</string>
+    <string name="category_details_header_update">Edit category</string>
 </resources>

@@ -48,7 +48,9 @@ class NoteRepositoryImpl: NoteRepository {
             val noteRealmObj = query.first().find()
 
             noteRealmObj?.let {
-                delete(it)
+                findLatest(it)?.apply {
+                    delete(this)
+                }
             }
         }
     }
@@ -105,7 +107,9 @@ class NoteRepositoryImpl: NoteRepository {
             val categoryRealmObj = query.first().find()
 
             categoryRealmObj?.let {
-                delete(it)
+                findLatest(it)?.apply {
+                    delete(this)
+                }
             }
         }
     }

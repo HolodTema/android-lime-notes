@@ -9,7 +9,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
 import com.terabyte.realmnotes.databinding.FragmentCategoryListBinding
+import com.terabyte.realmnotes.ui.activity.CategoryDetailsActivity
 import com.terabyte.realmnotes.ui.recycler.CategoryAdapter
 import com.terabyte.realmnotes.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
@@ -29,10 +31,12 @@ class CategoryListFragment: Fragment() {
     ): View {
         binding = FragmentCategoryListBinding.inflate(inflater, container, false)
 
-        adapter = CategoryAdapter(layoutInflater) {
-
+        adapter = CategoryAdapter(layoutInflater) { category ->
+            startActivity(CategoryDetailsActivity.newIntent(requireActivity(), category))
         }
         binding.recyclerCategories.adapter = adapter
+        val layoutManager = GridLayoutManager(requireActivity(), 2)
+        binding.recyclerCategories.layoutManager = layoutManager
 
         return binding.root
     }
@@ -58,7 +62,7 @@ class CategoryListFragment: Fragment() {
     override fun onStart() {
         super.onStart()
         binding.buttonAddCategory.setOnClickListener {
-//            startActivity()
+            startActivity(CategoryDetailsActivity.newIntent(requireActivity()))
         }
     }
 

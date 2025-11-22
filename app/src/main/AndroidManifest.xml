@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RealmNotes">
         <activity
+            android:name=".ui.activity.CategoryDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.NoteDetailsActivity"
             android:exported="false" />
         <activity

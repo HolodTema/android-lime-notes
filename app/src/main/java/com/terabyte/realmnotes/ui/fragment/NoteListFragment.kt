@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.terabyte.realmnotes.R
 import com.terabyte.realmnotes.databinding.FragmentNoteListBinding
+import com.terabyte.realmnotes.ui.activity.NoteDetailsActivity
 import com.terabyte.realmnotes.ui.recycler.NoteAdapter
 import com.terabyte.realmnotes.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
@@ -29,7 +30,10 @@ class NoteListFragment: Fragment() {
     ): View {
         binding = FragmentNoteListBinding.inflate(inflater, container, false)
 
-        adapter = NoteAdapter(layoutInflater)
+        adapter = NoteAdapter(layoutInflater) { note ->
+            startActivity(NoteDetailsActivity.newIntent(requireActivity(), note))
+        }
+
         binding.recyclerNotes.adapter = adapter
 
         return binding.root
@@ -43,6 +47,13 @@ class NoteListFragment: Fragment() {
                     binding.textAmountNotes.text = getString(R.string.amount_notes, it.size)
                 }
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        binding.buttonAddNote.setOnClickListener {
+            startActivity(NoteDetailsActivity.newIntent(requireActivity()))
         }
     }
 

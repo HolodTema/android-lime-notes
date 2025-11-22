@@ -25,6 +25,7 @@ class NoteRepositoryImpl: NoteRepository {
             val objId = ObjectId(note.id)
             val query = query(NoteRealmObject::class, "id == $0", objId)
             val noteRealmObj = query.first().find()
+            ObjectId.invoke()
 
             noteRealmObj?.let {
                 findLatest(it)?.apply {

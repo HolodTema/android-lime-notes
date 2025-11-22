@@ -13,7 +13,7 @@ class NoteRealmObject : RealmObject {
 
     fun toNote(): Note {
         return Note(
-            id = id.toString(),
+            id = id.toHexString(),
             text = text,
             date = Date(date)
         )

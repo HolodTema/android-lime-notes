@@ -24,7 +24,7 @@ class MainViewModel(private val noteRepository: NoteRepository): ViewModel() {
     val stateFlowMainFragment: StateFlow<MainFragmentState> = _stateFlowMainFragment.asStateFlow()
 
     private val _stateFlowNoteList = MutableStateFlow<List<Note>>(emptyList())
-    val stateFlowNoteList: StateFlow<List<Note>> = _stateFlowNoteList
+    val stateFlowNoteList: StateFlow<List<Note>> = _stateFlowNoteList.asStateFlow()
 
     init {
         loadNotes()

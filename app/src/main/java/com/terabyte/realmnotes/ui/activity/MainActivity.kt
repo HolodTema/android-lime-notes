@@ -1,5 +1,7 @@
 package com.terabyte.realmnotes.ui.activity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -70,7 +72,6 @@ class MainActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener {
             binding.drawerMain.openDrawer(GravityCompat.START)
         }
-
     }
 
     private fun setFragment(mainFragmentState: MainFragmentState) {
@@ -113,6 +114,12 @@ class MainActivity : AppCompatActivity() {
             MainFragmentState.FRAGMENT_SETTINGS -> {
                 getString(R.string.settings)
             }
+        }
+    }
+
+    companion object {
+        fun newIntent(context: Context): Intent {
+            return Intent(context, MainActivity::class.java)
         }
     }
 }

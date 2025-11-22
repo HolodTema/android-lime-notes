@@ -1,6 +1,8 @@
 package com.terabyte.realmnotes.ui.fragment
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,6 +50,14 @@ class NoteListFragment: Fragment() {
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.stateFlowNoteFilterText.collect { text ->
+                    binding.editSearchNote.setText(text)
+                }
+            }
+        }
     }
 
     override fun onStart() {
@@ -55,6 +65,26 @@ class NoteListFragment: Fragment() {
         binding.buttonAddNote.setOnClickListener {
             startActivity(NoteDetailsActivity.newIntent(requireActivity()))
         }
+
+        binding.editSearchNote.addTextChangedListener(object: TextWatcher {
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+                viewModel.setNoteFilterText(s.toString())
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) { }
+
+            override fun afterTextChanged(s: Editable?) { }
+        })
     }
 
     companion object {

@@ -23,23 +23,51 @@ class MainViewModel(private val noteRepository: NoteRepository): ViewModel() {
     private val _stateFlowMainFragment = MutableStateFlow(MainFragmentState.FRAGMENT_NOTE_LIST)
     val stateFlowMainFragment: StateFlow<MainFragmentState> = _stateFlowMainFragment.asStateFlow()
 
+    private var noteList: List<Note> = emptyList()
     private val _stateFlowNoteList = MutableStateFlow<List<Note>>(emptyList())
     val stateFlowNoteList: StateFlow<List<Note>> = _stateFlowNoteList.asStateFlow()
 
+    private val _stateFlowNoteFilterText = MutableStateFlow<String>("")
+    val stateFlowNoteFilterText: StateFlow<String> = _stateFlowNoteFilterText.asStateFlow()
+
     init {
         loadNotes()
+        configureFilterNotesByText()
     }
 
     fun setMainFragmentState(mainFragmentState: MainFragmentState) {
         _stateFlowMainFragment.value = mainFragmentState
     }
 
+    fun setNoteFilterText(text: String) {
+        _stateFlowNoteFilterText.value = text
+    }
+
     private fun loadNotes() {
         viewModelScope.launch {
             val deferred = async(Dispatchers.IO) {
-                noteRepository.getAllNotes()
+                noteRepository.getAllNotes().sorted().reversed()
             }
-            _stateFlowNoteList.value = deferred.await()
+            noteList = deferred.await()
+            _stateFlowNoteList.value = noteList
+        }
+    }
+
+    private fun configureFilterNotesByText() {
+        viewModelScope.launch {
+            stateFlowNoteFilterText.collect { text ->
+                if (text.isBlank()) {
+                    _stateFlowNoteList.value = noteList
+                }
+                else {
+                    val deferred = async(Dispatchers.Default) {
+                        noteList.filter { note ->
+                            note.text.contains(text, ignoreCase = true)
+                        }
+                    }
+                    _stateFlowNoteList.value = deferred.await()
+                }
+            }
         }
     }
 

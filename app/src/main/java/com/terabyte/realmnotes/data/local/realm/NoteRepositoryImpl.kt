@@ -5,6 +5,9 @@ import com.terabyte.realmnotes.domain.repository.NoteRepository
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.mongodb.kbson.ObjectId
 
 class NoteRepositoryImpl: NoteRepository {

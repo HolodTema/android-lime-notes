@@ -6,6 +6,8 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -29,7 +31,6 @@ class NoteDetailsActivity : AppCompatActivity() {
         val factory = NoteDetailsViewModel.Factory(noteRepository)
         ViewModelProvider(this, factory)[NoteDetailsViewModel::class]
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,12 +74,16 @@ class NoteDetailsActivity : AppCompatActivity() {
                 }
             }
         }
+
+        configureOnBackPressed()
     }
 
     override fun onStart() {
         super.onStart()
         binding.toolbar.setNavigationOnClickListener {
-            startActivity(MainActivity.newIntent(this))
+            viewModel.saveNote {
+                startActivity(MainActivity.newIntent(this))
+            }
         }
 
         binding.editNoteText.addTextChangedListener(object : TextWatcher {
@@ -98,13 +103,19 @@ class NoteDetailsActivity : AppCompatActivity() {
                 after: Int
             ) { }
 
-            override fun afterTextChanged(s: Editable?) { }
+            override fun afterTextChanged(s: Editable?) {}
         })
     }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.saveNote()
+    private fun configureOnBackPressed() {
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                viewModel.saveNote {
+                    onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(onBackPressedCallback)
     }
 
     companion object {

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.terabyte.realmnotes.domain.model.Note
 import com.terabyte.realmnotes.domain.repository.NoteRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,6 +40,25 @@ class NoteDetailsViewModel(private val noteRepository: NoteRepository): ViewMode
                     noteRepository.addNote(stateFlowNote.value)
                 }
             }
+        }
+    }
+
+    fun saveNote(noteSavedListener: ()->Unit) {
+        viewModelScope.launch {
+            val deferred = async(Dispatchers.IO) {
+                when (stateFlowNoteDetails.value) {
+                    NoteDetailsState.UPDATE_NOTE -> {
+                        noteRepository.updateNote(stateFlowNote.value)
+
+                    }
+                    NoteDetailsState.ADD_NOTE -> {
+                        noteRepository.addNote(stateFlowNote.value)
+                    }
+                }
+            }
+
+            deferred.await()
+            noteSavedListener()
         }
     }
 

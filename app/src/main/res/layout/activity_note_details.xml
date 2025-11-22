@@ -13,12 +13,44 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/menu_note_details_toolbar"
         app:navigationIcon="@drawable/ic_back"
         app:subtitleTextColor="@color/white"
         app:titleTextColor="@color/white"
         tools:subtitle="01.01.2026"
-        app:menu="@menu/menu_note_details_toolbar"
         tools:title="Create note" />
+
+    <ImageButton
+        android:id="@+id/button_copy_note_text"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/copy"
+        android:src="@drawable/ic_copy"
+        app:layout_constraintBottom_toBottomOf="@id/spinner_note_category"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/spinner_note_category" />
+
+    <ImageButton
+        android:id="@+id/button_share"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@android:color/transparent"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_share"
+        app:layout_constraintBottom_toBottomOf="@id/spinner_note_category"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/spinner_note_category" />
+
+    <Spinner
+        android:id="@+id/spinner_note_category"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/button_share"
+        app:layout_constraintStart_toEndOf="@+id/button_copy_note_text"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <EditText
         android:id="@+id/edit_note_text"
@@ -26,6 +58,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:hint="@string/enter_note_text"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner_note_category" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

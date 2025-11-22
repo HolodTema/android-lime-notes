@@ -1,5 +1,7 @@
 package com.terabyte.realmnotes.ui.activity
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -8,6 +10,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -109,6 +112,18 @@ class NoteDetailsActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+        binding.buttonShare.setOnClickListener {
+            if (viewModel.stateFlowNote.value.text.isNotBlank()) {
+                shareNoteText()
+            }
+        }
+
+        binding.buttonCopyNoteText.setOnClickListener {
+            if (viewModel.stateFlowNote.value.text.isNotBlank()) {
+                copyNoteTextToClipboard()
+                Toast.makeText(this, getString(R.string.copied), Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -137,6 +152,22 @@ class NoteDetailsActivity : AppCompatActivity() {
             }
         }
         onBackPressedDispatcher.addCallback(onBackPressedCallback)
+    }
+
+    private fun copyNoteTextToClipboard() {
+        val clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        val label = getString(R.string.clipboard_note_text_label)
+        val clip = ClipData.newPlainText(label, viewModel.stateFlowNote.value.text)
+        clipboardManager.setPrimaryClip(clip)
+    }
+
+    private fun shareNoteText() {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/plain"
+        intent.putExtra(Intent.EXTRA_TEXT, viewModel.stateFlowNote.value.text)
+
+        val intentChooser = Intent.createChooser(intent, getString(R.string.share_note_text_title))
+        startActivity(intentChooser)
     }
 
     companion object {

@@ -23,4 +23,8 @@
     <string name="delete_all_categories">Delete all categories</string>
     <string name="delete_all_notes">Delete all notes</string>
     <string name="done">Done</string>
+    <string name="copy">copy</string>
+    <string name="copied">Copied!</string>
+    <string name="clipboard_note_text_label">Note text</string>
+    <string name="share_note_text_title">Share note text:</string>
 </resources>

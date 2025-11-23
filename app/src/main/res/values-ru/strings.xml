@@ -38,7 +38,9 @@
     <string name="dialog_delete_all_categories_title">Удалить все категории?</string>
     <string name="dialog_delete_all_categories_msg">Данное действие необратимо. Заметки, привязанные к категориям, не будут удалены.</string>
     <string name="about_app_caption">О приложении</string>
-    <string name="about_app">Описание</string>
+
+    <string name="about_app">Lime-Заметки - простое приложение заметок на Android. Без рекламы и платных подписок.\n\nКаждая заметка содержит текст, дату создания и возможную категорию заметки. Пользователи могут создавать категории для заметок, а потом назначать эти категории разным заметкам для их группировки. Список заметок можно отфильтровать по тексту или по категории.\n\nИсходный код приложения можно найти на GitHub:\nhttps://github.com/HolodTema/android-lime-notes</string>
+
     <string name="app_icon">иконка приложения</string>
     <string name="app_version">Версия %s</string>
     <string name="created_at">Дата создания: %s"</string>

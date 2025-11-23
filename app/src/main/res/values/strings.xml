@@ -37,7 +37,7 @@
     <string name="dialog_delete_all_categories_title">Do you want to delete all categories?</string>
     <string name="dialog_delete_all_categories_msg">This action cannot be cancelled. Notes of these categories will NOT be deleted.</string>
     <string name="about_app_caption">About app</string>
-    <string name="about_app">Simple notes application</string>
+    <string name="about_app">Lime notes is a simple notes Android application. Without ADS and without in-app purchases.\n\nYou can create notes and add some categories for notes. Every note has text, date of creation and possible category. You can filter notes by their text or category name.\n\nYou can explore the source code of the app on GitHub:\nhttps://github.com/HolodTema/android-lime-notes</string>
     <string name="app_icon">app icon</string>
     <string name="app_version">Version %s</string>
     <string name="created_at">"Created at: %s"</string>

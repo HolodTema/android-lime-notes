@@ -21,6 +21,7 @@ import com.terabyte.realmnotes.application.MyApplication
 import com.terabyte.realmnotes.databinding.ActivityCategoryDetailsBinding
 import com.terabyte.realmnotes.domain.model.Category
 import com.terabyte.realmnotes.ui.dialog.ChangeColorDialog
+import com.terabyte.realmnotes.ui.dialog.DeleteCategoryDialog
 import com.terabyte.realmnotes.ui.viewmodel.CategoryDetailsState
 import com.terabyte.realmnotes.ui.viewmodel.CategoryDetailsViewModel
 import kotlinx.coroutines.launch
@@ -138,9 +139,7 @@ class CategoryDetailsActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_item_delete_category) {
-            viewModel.deleteCategory {
-                startActivity(MainActivity.newIntent(this))
-            }
+            showDeleteCategoryDialog()
             return true
         }
 
@@ -156,6 +155,20 @@ class CategoryDetailsActivity : AppCompatActivity() {
             }
         }
         onBackPressedDispatcher.addCallback(onBackPressedCallback)
+    }
+
+    private fun showDeleteCategoryDialog() {
+        supportFragmentManager.setFragmentResultListener(
+            DeleteCategoryDialog.REQUEST_KEY_DELETE_CATEGORY,
+            this
+        ) { _, _ ->
+            viewModel.deleteCategory {
+                startActivity(MainActivity.newIntent(this))
+            }
+        }
+
+        val dialog = DeleteCategoryDialog.newInstance()
+        dialog.show(supportFragmentManager, null)
     }
 
     companion object {

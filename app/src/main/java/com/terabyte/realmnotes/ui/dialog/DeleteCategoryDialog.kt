@@ -10,21 +10,22 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import com.terabyte.realmnotes.R
 import com.terabyte.realmnotes.databinding.DialogChangeColorBinding
-import com.terabyte.realmnotes.databinding.DialogDeleteAllCategoriesBinding
 import com.terabyte.realmnotes.databinding.DialogDeleteAllNotesBinding
+import com.terabyte.realmnotes.databinding.DialogDeleteCategoryBinding
+import com.terabyte.realmnotes.databinding.DialogDeleteNoteBinding
 
-class DeleteAllCategoriesDialog : DialogFragment() {
-    private lateinit var binding: DialogDeleteAllCategoriesBinding
+class DeleteCategoryDialog : DialogFragment() {
+    private lateinit var binding: DialogDeleteCategoryBinding
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = DialogDeleteAllCategoriesBinding.inflate(layoutInflater)
+        binding = DialogDeleteCategoryBinding.inflate(layoutInflater)
 
         binding.buttonCancel.setOnClickListener {
             dismiss()
         }
 
         binding.buttonDelete.setOnClickListener {
-            parentFragmentManager.setFragmentResult(REQUEST_KEY_DELETE_ALL_CATEGORIES, Bundle())
+            parentFragmentManager.setFragmentResult(REQUEST_KEY_DELETE_CATEGORY, Bundle())
             dismiss()
         }
 
@@ -35,9 +36,9 @@ class DeleteAllCategoriesDialog : DialogFragment() {
     }
 
     companion object {
-        const val REQUEST_KEY_DELETE_ALL_CATEGORIES = "requestKeyDeleteAllCategories"
-        fun newInstance(): DeleteAllCategoriesDialog {
-            return DeleteAllCategoriesDialog()
+        const val REQUEST_KEY_DELETE_CATEGORY = "requestKeyDeleteCategory"
+        fun newInstance(): DeleteCategoryDialog {
+            return DeleteCategoryDialog()
         }
     }
 }

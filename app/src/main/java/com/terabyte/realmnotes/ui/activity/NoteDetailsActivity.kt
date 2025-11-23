@@ -14,7 +14,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -24,8 +23,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.terabyte.realmnotes.R
 import com.terabyte.realmnotes.application.MyApplication
 import com.terabyte.realmnotes.databinding.ActivityNoteDetailsBinding
-import com.terabyte.realmnotes.domain.model.Category
 import com.terabyte.realmnotes.domain.model.Note
+import com.terabyte.realmnotes.ui.dialog.DeleteNoteDialog
 import com.terabyte.realmnotes.ui.spinner.SpinnerCategoryAdapter
 import com.terabyte.realmnotes.ui.viewmodel.NoteDetailsState
 import com.terabyte.realmnotes.ui.viewmodel.NoteDetailsViewModel
@@ -81,7 +80,8 @@ class NoteDetailsActivity : AppCompatActivity() {
                 viewModel.stateFlowNote.collect { note ->
                     binding.editNoteText.setText(note.text)
 
-                    val dateText = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(note.date)
+                    val dateText =
+                        SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(note.date)
                     binding.toolbar.subtitle = getString(R.string.created_at, dateText)
 
                 }
@@ -91,12 +91,13 @@ class NoteDetailsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.stateFlowCategoryList.collect { categories ->
-                    binding.spinnerNoteCategory.adapter = SpinnerCategoryAdapter(this@NoteDetailsActivity, layoutInflater, categories)
-                    val categorySelected = categories.find { it.id == viewModel.stateFlowNote.value.categoryId }
+                    binding.spinnerNoteCategory.adapter =
+                        SpinnerCategoryAdapter(this@NoteDetailsActivity, layoutInflater, categories)
+                    val categorySelected =
+                        categories.find { it.id == viewModel.stateFlowNote.value.categoryId }
                     if (categorySelected == null) {
                         binding.spinnerNoteCategory.setSelection(0)
-                    }
-                    else {
+                    } else {
                         val positionSelected = categories.indexOf(categorySelected)
                         binding.spinnerNoteCategory.setSelection(positionSelected)
                     }
@@ -104,21 +105,22 @@ class NoteDetailsActivity : AppCompatActivity() {
             }
         }
 
-        binding.spinnerNoteCategory.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                val category = viewModel.stateFlowCategoryList.value.getOrNull(position)
-                viewModel.updateNoteCategoryId(category?.id)
-            }
+        binding.spinnerNoteCategory.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val category = viewModel.stateFlowCategoryList.value.getOrNull(position)
+                    viewModel.updateNoteCategoryId(category?.id)
+                }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                viewModel.updateNoteCategoryId(null)
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    viewModel.updateNoteCategoryId(null)
+                }
             }
-        }
 
         configureOnBackPressed()
     }
@@ -146,7 +148,8 @@ class NoteDetailsActivity : AppCompatActivity() {
                 start: Int,
                 count: Int,
                 after: Int
-            ) { }
+            ) {
+            }
 
             override fun afterTextChanged(s: Editable?) {}
         })
@@ -175,9 +178,7 @@ class NoteDetailsActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_item_delete_note) {
-            viewModel.deleteNote {
-                startActivity(MainActivity.newIntent(this))
-            }
+            showDeleteNoteDialog()
         }
         return true
     }
@@ -209,7 +210,23 @@ class NoteDetailsActivity : AppCompatActivity() {
         startActivity(intentChooser)
     }
 
+    private fun showDeleteNoteDialog() {
+        supportFragmentManager.setFragmentResultListener(
+            DeleteNoteDialog.REQUEST_KEY_DELETE_NOTE,
+            this
+        ) { _, _ ->
+            viewModel.deleteNote {
+                startActivity(MainActivity.newIntent(this))
+            }
+        }
+
+        val dialog = DeleteNoteDialog.newInstance()
+        dialog.show(supportFragmentManager, DIALOG_TAG_DELETE_NOTE)
+    }
+
     companion object {
+        private const val DIALOG_TAG_DELETE_NOTE = "dialogTagDeleteNote"
+
         const val INTENT_KEY_NOTE = "intentKeyNote"
 
         fun newIntent(context: Context, note: Note): Intent {

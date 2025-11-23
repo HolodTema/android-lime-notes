@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lime Заметки</string>
+    <string name="notes">Заметки</string>
+    <string name="categories">Категории</string>
+    <string name="settings">Настройки</string>
+    <string name="dark_theme">Темная тема</string>
+    <string name="search">Поиск</string>
+    <string name="add">Добавить</string>
+    <string name="amount_notes">Найдено заметок: %d</string>
+    <string name="enter_note_text">Введите текст заметки</string>
+    <string name="note_details_header_insert">Создание заметки</string>
+    <string name="note_details_header_update">Редактирование заметки</string>
+    <string name="delete">Удалить</string>
+    <string name="clear_note_text_filter">clear_note_text_filter</string>
+    <string name="category">Категория</string>
+    <string name="add_your_first_category">Добавьте свою первую категорию!</string>
+    <string name="enter_category_name">Введите название категории</string>
+    <string name="name">Название:</string>
+    <string name="change_color">Выбрать цвет</string>
+    <string name="category_details_header_insert">Создание категории</string>
+    <string name="category_details_header_update">Редактирование категории</string>
+    <string name="delete_all_categories">Удалить все категории</string>
+    <string name="delete_all_notes">Удалить все заметки</string>
+    <string name="done">Готово</string>
+    <string name="copy">Копировать</string>
+    <string name="copied">Скопировано!</string>
+    <string name="clipboard_note_text_label">Текст заметки</string>
+    <string name="share_note_text_title">Поделиться заметкой:</string>
+    <string name="no_category">Нет категории</string>
+    <string name="all">Все</string>
+    <string name="danger_actions">Необратимые действия</string>
+    <string name="appearance">Внешний вид</string>
+    <string name="dialog_delete_all_notes_title">Удалить все заметки?</string>
+    <string name="dialog_delete_all_notes_msg">Данное действие необратимо.</string>
+    <string name="dialog_button_delete">Удалить</string>
+    <string name="cancel">Назад</string>
+    <string name="dialog_delete_all_categories_title">Удалить все категории?</string>
+    <string name="dialog_delete_all_categories_msg">Данное действие необратимо. Заметки, привязанные к категориям, не будут удалены.</string>
+    <string name="about_app_caption">О приложении</string>
+    <string name="about_app">Описание</string>
+    <string name="app_icon">иконка приложения</string>
+    <string name="app_version">Версия %s</string>
+    <string name="created_at">Дата создания: %s"</string>
+
+</resources>

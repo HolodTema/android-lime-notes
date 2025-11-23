@@ -1,10 +1,12 @@
 package com.terabyte.realmnotes.ui.viewmodel
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.terabyte.realmnotes.domain.model.Category
 import com.terabyte.realmnotes.domain.model.NoteCategoryPair
+import com.terabyte.realmnotes.domain.repository.DataStoreRepository
 import com.terabyte.realmnotes.domain.repository.NoteRepository
 import com.terabyte.realmnotes.domain.util.NoteCategoryPairCreator
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +23,7 @@ enum class MainFragmentState {
     FRAGMENT_SETTINGS
 }
 
-class MainViewModel(private val noteRepository: NoteRepository) : ViewModel() {
+class MainViewModel(private val noteRepository: NoteRepository, private val dataStoreRepository: DataStoreRepository) : ViewModel() {
     private val _stateFlowMainFragment = MutableStateFlow(MainFragmentState.FRAGMENT_NOTE_LIST)
     val stateFlowMainFragment: StateFlow<MainFragmentState> = _stateFlowMainFragment.asStateFlow()
 
@@ -44,10 +46,10 @@ class MainViewModel(private val noteRepository: NoteRepository) : ViewModel() {
     private val _stateFLowCategoryFilterList = MutableStateFlow<List<Category>>(emptyList())
     val stateFlowCategoryFilterList: StateFlow<List<Category>> = _stateFLowCategoryFilterList.asStateFlow()
 
-
     init {
         loadNotesAndCategories()
         configureFilterNotesByText()
+        setUITheme()
     }
 
     fun loadNotesAndCategories() {
@@ -116,11 +118,24 @@ class MainViewModel(private val noteRepository: NoteRepository) : ViewModel() {
         }
     }
 
+    fun setUITheme() {
+        viewModelScope.launch {
+            dataStoreRepository.isDarkTheme.collect { isDarkTheme ->
+                val themeMode = if (isDarkTheme) {
+                    AppCompatDelegate.MODE_NIGHT_YES
+                } else {
+                    AppCompatDelegate.MODE_NIGHT_NO
+                }
+                AppCompatDelegate.setDefaultNightMode(themeMode)
+            }
+        }
+    }
+
     @Suppress("UNCHECKED_CAST")
-    class Factory(private val noteRepository: NoteRepository) : ViewModelProvider.Factory {
+    class Factory(private val noteRepository: NoteRepository, private val dataStoreRepository: DataStoreRepository) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return MainViewModel(noteRepository) as T
+            return MainViewModel(noteRepository, dataStoreRepository) as T
         }
 
     }

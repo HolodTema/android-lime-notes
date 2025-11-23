@@ -53,7 +53,7 @@ class ChangeColorDialog : DialogFragment() {
             dismiss()
         }
 
-        return AlertDialog.Builder(requireContext())
+        return AlertDialog.Builder(requireContext(), R.style.style_transparent_alert_dialog)
             .setView(binding.root)
             .setCancelable(true)
             .create()

@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
+    android:fitsSystemWindows="true"
     tools:context=".ui.activity.CategoryDetailsActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -17,6 +18,7 @@
         app:menu="@menu/menu_category_details_toolbar"
         app:navigationIcon="@drawable/ic_back"
         app:subtitleTextColor="?attr/colorOnPrimaryContainer"
+        app:titleTextAppearance="@style/style_toolbar_title"
         app:titleTextColor="?attr/colorOnPrimaryContainer"
         tools:title="Create category" />
 
@@ -36,12 +38,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:maxLength="20"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/background_edit_note_text"
         android:hint="@string/enter_category_name"
         android:inputType="text"
+        android:maxLength="20"
         android:padding="5dp"
         android:textColor="?attr/colorOnPrimary"
         app:layout_constraintEnd_toEndOf="parent"

@@ -27,4 +27,13 @@
     <color name="accentLight">#2B712F</color>
 
 
+    <color name="primaryDark">#1d1d1d</color>
+    <color name="onPrimaryDark">#FFFFFF</color>
+    <color name="primaryContainerDark">#044508</color>
+    <color name="onPrimaryContainerDark">#FFFFFF</color>
+    <color name="secondaryDark">#0F0F0F</color>
+    <color name="onSecondaryDark">#FFFFFF</color>
+    <color name="colorErrorDark">#68130C</color>
+    <color name="onErrorDark">#FFFFFF</color>
+    <color name="accentDark">#1C4D1E</color>
 </resources>

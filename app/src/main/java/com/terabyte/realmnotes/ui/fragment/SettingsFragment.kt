@@ -15,6 +15,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.terabyte.realmnotes.R
 import com.terabyte.realmnotes.application.MyApplication
 import com.terabyte.realmnotes.databinding.FragmentSettingsBinding
+import com.terabyte.realmnotes.ui.dialog.DeleteAllCategoriesDialog
+import com.terabyte.realmnotes.ui.dialog.DeleteAllNotesDialog
 import com.terabyte.realmnotes.ui.viewmodel.MainViewModel
 import com.terabyte.realmnotes.ui.viewmodel.SettingsViewModel
 import kotlinx.coroutines.launch
@@ -54,6 +56,7 @@ class SettingsFragment : Fragment() {
         super.onStart()
         binding.switchDarkTheme.setOnCheckedChangeListener { _, isChecked ->
             viewModel.saveIsDarkTheme(isChecked)
+            mainViewModel.setUITheme()
         }
 
         binding.buttonDeleteAllNotes.setOnClickListener {
@@ -66,35 +69,27 @@ class SettingsFragment : Fragment() {
     }
 
     private fun showDeleteAllNotesDialog() {
-        val dialog = AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.dialog_delete_all_notes_title))
-            .setMessage(getString(R.string.dialog_delete_all_notes_msg))
-            .setCancelable(true)
-            .setPositiveButton(getString(R.string.dialog_button_delete)) { _, _ ->
-                mainViewModel.deleteAllNotes()
-            }
-            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .create()
+        parentFragmentManager.setFragmentResultListener(
+            DeleteAllNotesDialog.REQUEST_KEY_DELETE_ALL_NOTES,
+            viewLifecycleOwner
+        ) { _, _ ->
+            mainViewModel.deleteAllNotes()
+        }
 
-        dialog.show()
+        val dialog = DeleteAllNotesDialog.newInstance()
+        dialog.show(parentFragmentManager, DIALOG_TAG_DELETE_ALL_NOTES)
     }
 
     private fun showDeleteAllCategoriesDialog() {
-        val dialog = AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.dialog_delete_all_categories_title))
-            .setMessage(getString(R.string.dialog_delete_all_categories_msg))
-            .setCancelable(true)
-            .setPositiveButton(getString(R.string.dialog_button_delete)) { _, _ ->
-                mainViewModel.deleteAllCategories()
-            }
-            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .create()
+        parentFragmentManager.setFragmentResultListener(
+            DeleteAllCategoriesDialog.REQUEST_KEY_DELETE_ALL_CATEGORIES,
+            viewLifecycleOwner
+        ) { _, _ ->
+            mainViewModel.deleteAllCategories()
+        }
 
-        dialog.show()
+        val dialog = DeleteAllCategoriesDialog.newInstance()
+        dialog.show(parentFragmentManager, DIALOG_TAG_DELETE_ALL_CATEGORIES)
     }
 
     private fun configureAppVersionText() {
@@ -105,13 +100,15 @@ class SettingsFragment : Fragment() {
             val version = packageInfo.versionName
 
             binding.textAppVersion.text = getString(R.string.app_version, version)
-        }
-        catch (e: PackageManager.NameNotFoundException) {
+        } catch (e: PackageManager.NameNotFoundException) {
             binding.textAppVersion.visibility = View.GONE
         }
     }
 
     companion object {
+        private const val DIALOG_TAG_DELETE_ALL_NOTES = "dialogTagDeleteAllNotes"
+        private const val DIALOG_TAG_DELETE_ALL_CATEGORIES = "dialogTagDeleteAllCategories"
+
         fun newInstance(): SettingsFragment {
             return SettingsFragment()
         }

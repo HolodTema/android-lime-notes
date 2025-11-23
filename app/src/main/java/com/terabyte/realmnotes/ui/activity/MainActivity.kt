@@ -3,8 +3,12 @@ package com.terabyte.realmnotes.ui.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -24,12 +28,14 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by lazy {
         val noteRepository = (application as MyApplication).noteRepository
-        val factory = MainViewModel.Factory(noteRepository)
+        val dataStoreRepository = (application as MyApplication).dataStoreRepository
+        val factory = MainViewModel.Factory(noteRepository, dataStoreRepository)
         ViewModelProvider(this, factory)[MainViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

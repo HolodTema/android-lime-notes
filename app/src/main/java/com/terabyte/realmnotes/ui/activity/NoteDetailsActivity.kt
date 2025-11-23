@@ -15,6 +15,7 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -43,6 +44,7 @@ class NoteDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityNoteDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -78,9 +80,10 @@ class NoteDetailsActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.stateFlowNote.collect { note ->
                     binding.editNoteText.setText(note.text)
-                    binding.toolbar.subtitle =
-                        SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-                            .format(note.date)
+
+                    val dateText = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(note.date)
+                    binding.toolbar.subtitle = getString(R.string.created_at, dateText)
+
                 }
             }
         }

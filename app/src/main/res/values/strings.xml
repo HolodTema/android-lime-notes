@@ -29,4 +29,12 @@
     <string name="share_note_text_title">Share note text:</string>
     <string name="no_category">No category</string>
     <string name="all">All</string>
+    <string name="danger_actions">Danger actions</string>
+    <string name="appearance">Appearance</string>
+    <string name="dialog_delete_all_notes_title">Do you want to delete all notes?</string>
+    <string name="dialog_delete_all_notes_msg">This action cannot be cancelled.</string>
+    <string name="dialog_button_delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="dialog_delete_all_categories_title">Do you want to delete all categories?</string>
+    <string name="dialog_delete_all_categories_msg">This action cannot be cancelled. Notes of these categories will NOT be deleted.</string>
 </resources>

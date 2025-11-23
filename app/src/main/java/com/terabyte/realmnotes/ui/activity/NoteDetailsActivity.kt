@@ -183,7 +183,7 @@ class NoteDetailsActivity : AppCompatActivity() {
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 viewModel.saveNote {
-                    onBackPressedDispatcher.onBackPressed()
+                    startActivity(MainActivity.newIntent(this@NoteDetailsActivity))
                 }
             }
         }

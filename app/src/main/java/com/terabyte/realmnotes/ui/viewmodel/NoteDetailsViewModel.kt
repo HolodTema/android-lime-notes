@@ -1,8 +1,10 @@
 package com.terabyte.realmnotes.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.terabyte.realmnotes.LOG_TAG_DEBUG
 import com.terabyte.realmnotes.domain.model.Category
 import com.terabyte.realmnotes.domain.model.Note
 import com.terabyte.realmnotes.domain.repository.NoteRepository
@@ -48,20 +50,6 @@ class NoteDetailsViewModel(private val noteRepository: NoteRepository): ViewMode
         _stateFlowNote.value = note
     }
 
-    fun saveNote() {
-        viewModelScope.launch(Dispatchers.IO) {
-            when (stateFlowNoteDetails.value) {
-                NoteDetailsState.UPDATE_NOTE -> {
-                    noteRepository.updateNote(stateFlowNote.value)
-
-                }
-                NoteDetailsState.ADD_NOTE -> {
-                    noteRepository.addNote(stateFlowNote.value)
-                }
-            }
-        }
-    }
-
     fun saveNote(noteSavedListener: ()->Unit) {
         viewModelScope.launch {
             val deferred = async(Dispatchers.IO) {
@@ -77,6 +65,7 @@ class NoteDetailsViewModel(private val noteRepository: NoteRepository): ViewMode
             }
 
             deferred.await()
+            Log.d(LOG_TAG_DEBUG, "note was saved")
             noteSavedListener()
         }
     }

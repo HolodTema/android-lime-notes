@@ -149,7 +149,7 @@ class CategoryDetailsActivity : AppCompatActivity() {
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 viewModel.saveCategory {
-                    onBackPressedDispatcher.onBackPressed()
+                    startActivity(MainActivity.newIntent(this@CategoryDetailsActivity))
                 }
             }
         }

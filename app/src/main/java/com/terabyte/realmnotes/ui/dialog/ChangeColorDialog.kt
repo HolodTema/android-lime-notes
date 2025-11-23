@@ -51,6 +51,10 @@ class ChangeColorDialog : DialogFragment() {
             setIndicatorSelection(indicator, startColor)
         }
 
+        binding.textDone.setOnClickListener {
+            dismiss()
+        }
+
         return AlertDialog.Builder(requireContext())
             .setView(binding.root)
             .setCancelable(true)

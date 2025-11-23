@@ -45,7 +45,7 @@ class NoteListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.stateFlowNoteList.collect {
+                viewModel.stateFlowNoteCategoryPairList.collect {
                     adapter.submitList(it)
                     binding.textAmountNotes.text = getString(R.string.amount_notes, it.size)
                 }

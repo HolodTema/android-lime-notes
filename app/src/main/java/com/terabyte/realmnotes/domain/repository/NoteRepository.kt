@@ -25,6 +25,8 @@ interface NoteRepository {
 
     suspend fun deleteAllCategories()
 
+    suspend fun removeCategoryIdFromAllNotes(categoryId: String)
+
     fun close()
 
 }

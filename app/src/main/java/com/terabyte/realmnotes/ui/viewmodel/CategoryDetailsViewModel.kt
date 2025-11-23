@@ -24,20 +24,22 @@ class CategoryDetailsViewModel(private val noteRepository: NoteRepository) : Vie
     val stateFlowCategory: StateFlow<Category> = _stateFlowCategory.asStateFlow()
 
     private val _stateFlowCategoryDetails = MutableStateFlow(CategoryDetailsState.ADD_CATEGORY)
-    val stateFlowCategoryDetails: StateFlow<CategoryDetailsState> = _stateFlowCategoryDetails.asStateFlow()
+    val stateFlowCategoryDetails: StateFlow<CategoryDetailsState> =
+        _stateFlowCategoryDetails.asStateFlow()
 
     fun setStateUpdate(category: Category) {
         _stateFlowCategory.value = category
         _stateFlowCategoryDetails.value = CategoryDetailsState.UPDATE_CATEGORY
     }
 
-    fun saveCategory(categorySavedListener: ()->Unit) {
+    fun saveCategory(categorySavedListener: () -> Unit) {
         viewModelScope.launch {
             val deferred = async(Dispatchers.IO) {
                 when (stateFlowCategoryDetails.value) {
                     CategoryDetailsState.ADD_CATEGORY -> {
                         noteRepository.addCategory(stateFlowCategory.value)
                     }
+
                     CategoryDetailsState.UPDATE_CATEGORY -> {
                         noteRepository.updateCategory(stateFlowCategory.value)
                     }
@@ -49,7 +51,7 @@ class CategoryDetailsViewModel(private val noteRepository: NoteRepository) : Vie
         }
     }
 
-    fun deleteCategory(categoryDeletedListener: ()->Unit) {
+    fun deleteCategory(categoryDeletedListener: () -> Unit) {
         val categoryId = stateFlowCategory.value.id
         if (categoryId == null) {
             return
@@ -58,6 +60,7 @@ class CategoryDetailsViewModel(private val noteRepository: NoteRepository) : Vie
         viewModelScope.launch {
             val deferred = async(Dispatchers.IO) {
                 noteRepository.deleteCategory(categoryId)
+                noteRepository.removeCategoryIdFromAllNotes(categoryId)
             }
 
             deferred.await()

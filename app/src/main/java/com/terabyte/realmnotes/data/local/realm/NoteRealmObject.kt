@@ -10,12 +10,14 @@ class NoteRealmObject : RealmObject {
     @PrimaryKey var id: ObjectId = ObjectId()
     var text: String = ""
     var date: Long = 0L
+    var categoryId: String? = null
 
     fun toNote(): Note {
         return Note(
             id = id.toHexString(),
             text = text,
-            date = Date(date)
+            date = Date(date),
+            categoryId = categoryId
         )
     }
 
@@ -26,12 +28,12 @@ class NoteRealmObject : RealmObject {
             result.apply {
                 text = note.text
                 date = note.date.time
+                categoryId = note.categoryId
             }
 
             if (note.id != null) {
                 result.id = ObjectId(note.id)
             }
-
             return result
         }
 

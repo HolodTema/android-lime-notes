@@ -31,6 +31,7 @@ class NoteRepositoryImpl: NoteRepository {
             noteRealmObj?.let {
                 findLatest(it)?.apply {
                     text = note.text
+                    categoryId = note.categoryId
                 }
             }
         }
@@ -117,6 +118,14 @@ class NoteRepositoryImpl: NoteRepository {
     override suspend fun deleteAllCategories() {
         realm.write {
             delete(CategoryRealmObject::class)
+        }
+    }
+
+    override suspend fun removeCategoryIdFromAllNotes(categoryId: String) {
+        val notes = getAllNotes().filter { it.categoryId == categoryId }
+        notes.forEach { note ->
+            note.categoryId = null
+            updateNote(note)
         }
     }
 

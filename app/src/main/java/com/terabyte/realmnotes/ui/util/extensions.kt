@@ -1,4 +1,4 @@
-package com.terabyte.realmnotes.util
+package com.terabyte.realmnotes.ui.util
 
 import android.content.Context
 import android.widget.Toast

@@ -10,6 +10,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
@@ -21,7 +23,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.terabyte.realmnotes.R
 import com.terabyte.realmnotes.application.MyApplication
 import com.terabyte.realmnotes.databinding.ActivityNoteDetailsBinding
+import com.terabyte.realmnotes.domain.model.Category
 import com.terabyte.realmnotes.domain.model.Note
+import com.terabyte.realmnotes.ui.spinner.SpinnerCategoryAdapter
 import com.terabyte.realmnotes.ui.viewmodel.NoteDetailsState
 import com.terabyte.realmnotes.ui.viewmodel.NoteDetailsViewModel
 import kotlinx.coroutines.launch
@@ -77,6 +81,38 @@ class NoteDetailsActivity : AppCompatActivity() {
                         SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
                             .format(note.date)
                 }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.stateFlowCategoryList.collect { categories ->
+                    binding.spinnerNoteCategory.adapter = SpinnerCategoryAdapter(this@NoteDetailsActivity, layoutInflater, categories)
+                    val categorySelected = categories.find { it.id == viewModel.stateFlowNote.value.categoryId }
+                    if (categorySelected == null) {
+                        binding.spinnerNoteCategory.setSelection(0)
+                    }
+                    else {
+                        val positionSelected = categories.indexOf(categorySelected)
+                        binding.spinnerNoteCategory.setSelection(positionSelected)
+                    }
+                }
+            }
+        }
+
+        binding.spinnerNoteCategory.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val category = viewModel.stateFlowCategoryList.value.getOrNull(position)
+                viewModel.updateNoteCategoryId(category?.id)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                viewModel.updateNoteCategoryId(null)
             }
         }
 

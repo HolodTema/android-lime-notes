@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.terabyte.realmnotes.domain.model.Category
-import com.terabyte.realmnotes.domain.model.Note
+import com.terabyte.realmnotes.domain.model.NoteCategoryPair
 import com.terabyte.realmnotes.domain.repository.NoteRepository
+import com.terabyte.realmnotes.domain.util.NoteCategoryPairCreator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,24 +21,45 @@ enum class MainFragmentState {
     FRAGMENT_SETTINGS
 }
 
-class MainViewModel(private val noteRepository: NoteRepository): ViewModel() {
+class MainViewModel(private val noteRepository: NoteRepository) : ViewModel() {
     private val _stateFlowMainFragment = MutableStateFlow(MainFragmentState.FRAGMENT_NOTE_LIST)
     val stateFlowMainFragment: StateFlow<MainFragmentState> = _stateFlowMainFragment.asStateFlow()
 
-    private var noteList: List<Note> = emptyList()
-    private val _stateFlowNoteList = MutableStateFlow<List<Note>>(emptyList())
-    val stateFlowNoteList: StateFlow<List<Note>> = _stateFlowNoteList.asStateFlow()
 
     private val _stateFlowNoteFilterText = MutableStateFlow<String>("")
     val stateFlowNoteFilterText: StateFlow<String> = _stateFlowNoteFilterText.asStateFlow()
 
+
     private val _stateFlowCategoryList = MutableStateFlow<List<Category>>(emptyList())
     val stateFlowCategoryList: StateFlow<List<Category>> = _stateFlowCategoryList.asStateFlow()
 
+
+    private var noteCategoryPairList: List<NoteCategoryPair> = emptyList()
+    private val _stateFlowNoteCategoryPairList =
+        MutableStateFlow<List<NoteCategoryPair>>(emptyList())
+    val stateFlowNoteCategoryPairList: StateFlow<List<NoteCategoryPair>> =
+        _stateFlowNoteCategoryPairList.asStateFlow()
+
     init {
-        loadNotes()
-        loadCategories()
+        loadNotesAndCategories()
         configureFilterNotesByText()
+    }
+
+    fun loadNotesAndCategories() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val notes = noteRepository.getAllNotes()
+                val categories = noteRepository.getAllCategories()
+                val noteCategoryPairs =
+                    NoteCategoryPairCreator.createNoteCategoryPairList(notes, categories)
+
+                withContext(Dispatchers.Main) {
+                    noteCategoryPairList = noteCategoryPairs
+                    _stateFlowCategoryList.value = categories
+                    _stateFlowNoteCategoryPairList.value = noteCategoryPairs
+                }
+            }
+        }
     }
 
     fun setMainFragmentState(mainFragmentState: MainFragmentState) {
@@ -54,7 +76,7 @@ class MainViewModel(private val noteRepository: NoteRepository): ViewModel() {
                 noteRepository.deleteAllNotes()
             }
             deferred.await()
-            loadNotes()
+            loadNotesAndCategories()
         }
     }
 
@@ -64,26 +86,7 @@ class MainViewModel(private val noteRepository: NoteRepository): ViewModel() {
                 noteRepository.deleteAllCategories()
             }
             deferred.await()
-            loadCategories()
-        }
-    }
-
-    private fun loadNotes() {
-        viewModelScope.launch {
-            val deferred = async(Dispatchers.IO) {
-                noteRepository.getAllNotes().sorted().reversed()
-            }
-            noteList = deferred.await()
-            _stateFlowNoteList.value = noteList
-        }
-    }
-
-    private fun loadCategories() {
-        viewModelScope.launch {
-            val deferred = async(Dispatchers.IO) {
-                noteRepository.getAllCategories().sorted()
-            }
-            _stateFlowCategoryList.value = deferred.await()
+            loadNotesAndCategories()
         }
     }
 
@@ -91,22 +94,19 @@ class MainViewModel(private val noteRepository: NoteRepository): ViewModel() {
         viewModelScope.launch {
             stateFlowNoteFilterText.collect { text ->
                 if (text.isBlank()) {
-                    _stateFlowNoteList.value = noteList
-                }
-                else {
+                    _stateFlowNoteCategoryPairList.value = noteCategoryPairList
+                } else {
                     val deferred = async(Dispatchers.Default) {
-                        noteList.filter { note ->
-                            note.text.contains(text, ignoreCase = true)
-                        }
+                        NoteCategoryPairCreator.filterByNoteText(text, noteCategoryPairList)
                     }
-                    _stateFlowNoteList.value = deferred.await()
+                    _stateFlowNoteCategoryPairList.value = deferred.await()
                 }
             }
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    class Factory(private val noteRepository: NoteRepository): ViewModelProvider.Factory {
+    class Factory(private val noteRepository: NoteRepository) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return MainViewModel(noteRepository) as T

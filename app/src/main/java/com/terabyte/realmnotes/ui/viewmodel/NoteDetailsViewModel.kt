@@ -3,6 +3,7 @@ package com.terabyte.realmnotes.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.terabyte.realmnotes.domain.model.Category
 import com.terabyte.realmnotes.domain.model.Note
 import com.terabyte.realmnotes.domain.repository.NoteRepository
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 enum class NoteDetailsState {
     ADD_NOTE,
@@ -24,6 +24,24 @@ class NoteDetailsViewModel(private val noteRepository: NoteRepository): ViewMode
 
     private val _stateFlowNoteDetails = MutableStateFlow(NoteDetailsState.ADD_NOTE)
     val stateFlowNoteDetails: StateFlow<NoteDetailsState> = _stateFlowNoteDetails.asStateFlow()
+
+    private val _stateFlowCategoryList = MutableStateFlow<List<Category>>(emptyList())
+    val stateFlowCategoryList: StateFlow<List<Category>> = _stateFlowCategoryList.asStateFlow()
+
+    init {
+        loadCategories()
+    }
+
+    fun loadCategories() {
+        viewModelScope.launch {
+            val deferred = async(Dispatchers.IO) {
+                val categories = noteRepository.getAllCategories().toMutableList()
+                categories.add(0, Category())
+                categories.toList()
+            }
+            _stateFlowCategoryList.value = deferred.await()
+        }
+    }
 
     fun setStateUpdate(note: Note) {
         _stateFlowNoteDetails.value = NoteDetailsState.UPDATE_NOTE
@@ -80,6 +98,10 @@ class NoteDetailsViewModel(private val noteRepository: NoteRepository): ViewMode
 
     fun updateNoteText(text: String) {
         _stateFlowNote.value.text = text
+    }
+
+    fun updateNoteCategoryId(categoryId: String?) {
+        _stateFlowNote.value.categoryId = categoryId
     }
 
     @Suppress("UNCHECKED_CAST")

@@ -5,18 +5,19 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSecondary"
     tools:context=".ui.activity.CategoryDetailsActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="?attr/colorPrimaryContainer"
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/menu_category_details_toolbar"
         app:navigationIcon="@drawable/ic_back"
-        app:subtitleTextColor="@color/white"
-        app:titleTextColor="@color/white"
+        app:subtitleTextColor="?attr/colorOnPrimaryContainer"
+        app:titleTextColor="?attr/colorOnPrimaryContainer"
         tools:title="Create category" />
 
     <TextView
@@ -25,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:text="@string/name"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnSecondary"
         android:textSize="16sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/edit_category_name"
         app:layout_constraintStart_toStartOf="parent" />
@@ -35,10 +36,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
+        android:maxLength="20"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
+        android:background="@drawable/background_edit_note_text"
         android:hint="@string/enter_category_name"
         android:inputType="text"
+        android:padding="5dp"
+        android:textColor="?attr/colorOnPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/text_caption_name"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
@@ -58,7 +63,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:backgroundTint="?attr/colorPrimaryContainer"
         android:text="@string/change_color"
+        android:textColor="?attr/colorOnPrimaryContainer"
         app:layout_constraintBottom_toBottomOf="@id/image_category_icon"
         app:layout_constraintStart_toEndOf="@+id/image_category_icon"
         app:layout_constraintTop_toTopOf="@id/image_category_icon" />

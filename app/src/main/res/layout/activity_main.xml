@@ -17,8 +17,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:titleTextColor="@color/white"
-            android:background="?attr/colorPrimary" />
+            app:titleTextColor="?attr/colorOnPrimaryContainer"
+            app:subtitleTextColor="?attr/colorOnPrimaryContainer"
+            android:background="?attr/colorPrimaryContainer" />
 
         <FrameLayout
             android:id="@+id/frame_main_fragment_container"
@@ -31,6 +32,10 @@
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view_main"
         android:layout_width="wrap_content"
+        android:background="?attr/colorPrimaryContainer"
+        app:itemIconTint="?attr/colorOnPrimaryContainer"
+        app:itemTextColor="?attr/colorOnPrimaryContainer"
+        app:itemShapeFillColor="@color/color_nav_main_item"
         android:layout_height="match_parent"
         app:headerLayout="@layout/nav_view_main_header"
         android:layout_gravity="start"

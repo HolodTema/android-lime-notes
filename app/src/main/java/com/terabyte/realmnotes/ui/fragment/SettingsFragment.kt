@@ -1,6 +1,7 @@
 package com.terabyte.realmnotes.ui.fragment
 
 import android.app.AlertDialog
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -43,6 +44,9 @@ class SettingsFragment : Fragment() {
                 }
             }
         }
+
+        configureAppVersionText()
+
         return binding.root
     }
 
@@ -91,6 +95,20 @@ class SettingsFragment : Fragment() {
             .create()
 
         dialog.show()
+    }
+
+    private fun configureAppVersionText() {
+        try {
+            val packageInfo = requireActivity().packageManager
+                .getPackageInfo(requireContext().packageName, 0)
+
+            val version = packageInfo.versionName
+
+            binding.textAppVersion.text = getString(R.string.app_version, version)
+        }
+        catch (e: PackageManager.NameNotFoundException) {
+            binding.textAppVersion.visibility = View.GONE
+        }
     }
 
     companion object {

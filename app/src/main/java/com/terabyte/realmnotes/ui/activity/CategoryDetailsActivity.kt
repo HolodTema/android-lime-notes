@@ -49,10 +49,11 @@ class CategoryDetailsActivity : AppCompatActivity() {
             }
         }
 
+        setSupportActionBar(binding.toolbar)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.stateFlowCategoryDetails.collect { state ->
-                    binding.toolbar.title = when (state) {
+                    supportActionBar?.title = when (state) {
                         CategoryDetailsState.ADD_CATEGORY -> {
                             getString(R.string.category_details_header_insert)
                         }
@@ -74,7 +75,6 @@ class CategoryDetailsActivity : AppCompatActivity() {
             }
         }
 
-        setSupportActionBar(binding.toolbar)
         configureOnBackPressed()
     }
 

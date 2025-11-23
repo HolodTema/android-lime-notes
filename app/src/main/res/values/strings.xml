@@ -37,4 +37,8 @@
     <string name="cancel">Cancel</string>
     <string name="dialog_delete_all_categories_title">Do you want to delete all categories?</string>
     <string name="dialog_delete_all_categories_msg">This action cannot be cancelled. Notes of these categories will NOT be deleted.</string>
+    <string name="about_app_caption">About app</string>
+    <string name="about_app">Simple notes application</string>
+    <string name="app_icon">app icon</string>
+    <string name="app_version">Version %s</string>
 </resources>

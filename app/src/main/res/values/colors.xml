@@ -16,4 +16,15 @@
     <color name="brown">#543609</color>
 
 
+    <color name="primaryLight">#FFFFFF</color>
+    <color name="onPrimaryLight">#1D1D1D</color>
+    <color name="primaryContainerLight">#388e3c</color>
+    <color name="onPrimaryContainerLight">#FFFFFF</color>
+    <color name="secondaryLight">#CEDECE</color>
+    <color name="onSecondaryLight">#1D1D1D</color>
+    <color name="colorErrorLight">#F44336</color>
+    <color name="onErrorLight">#FFFFFF</color>
+    <color name="accentLight">#2B712F</color>
+
+
 </resources>

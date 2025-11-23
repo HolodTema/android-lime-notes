@@ -5,18 +5,19 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSecondary"
     tools:context=".ui.activity.NoteDetailsActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/menu_note_details_toolbar"
         app:navigationIcon="@drawable/ic_back"
-        app:subtitleTextColor="@color/white"
-        app:titleTextColor="@color/white"
+        app:titleTextColor="?attr/colorOnPrimaryContainer"
+        app:subtitleTextColor="?attr/colorOnPrimaryContainer"
+        android:background="?attr/colorPrimaryContainer"
         tools:subtitle="01.01.2026"
         tools:title="Create note" />
 
@@ -28,6 +29,7 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/copy"
         android:src="@drawable/ic_copy"
+        app:tint="?attr/colorOnSecondary"
         app:layout_constraintBottom_toBottomOf="@id/spinner_note_category"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/spinner_note_category" />
@@ -38,12 +40,15 @@
         android:layout_height="30dp"
         android:background="@android:color/transparent"
         android:layout_marginEnd="10dp"
+        app:tint="?attr/colorOnSecondary"
         android:src="@drawable/ic_share"
         app:layout_constraintBottom_toBottomOf="@id/spinner_note_category"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/spinner_note_category" />
 
     <Spinner
+        android:background="@drawable/background_edit_note_text"
+        android:padding="5dp"
         android:id="@+id/spinner_note_category"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -53,7 +58,10 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <EditText
+        android:background="@drawable/background_edit_note_text"
+        android:padding="5dp"
         android:id="@+id/edit_note_text"
+        android:textColor="?attr/colorOnPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"

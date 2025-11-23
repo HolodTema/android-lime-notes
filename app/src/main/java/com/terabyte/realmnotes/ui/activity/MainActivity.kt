@@ -45,30 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-
-        binding.navigationViewMain.setNavigationItemSelectedListener { menuItem ->
-            val mainFragmentState = when (menuItem.itemId) {
-                R.id.menu_item_note_list -> {
-                    MainFragmentState.FRAGMENT_NOTE_LIST
-                }
-
-                R.id.menu_item_category_list -> {
-                    MainFragmentState.FRAGMENT_CATEGORY_LIST
-                }
-
-                R.id.menu_item_settings -> {
-                    MainFragmentState.FRAGMENT_SETTINGS
-                }
-
-                else -> {
-                    MainFragmentState.FRAGMENT_NOTE_LIST
-                }
-            }
-            viewModel.setMainFragmentState(mainFragmentState)
-            binding.drawerMain.closeDrawer(GravityCompat.START)
-            true
-        }
-
+        configureNavigationView()
         binding.toolbar.setNavigationOnClickListener {
             binding.drawerMain.openDrawer(GravityCompat.START)
         }
@@ -114,6 +91,43 @@ class MainActivity : AppCompatActivity() {
             MainFragmentState.FRAGMENT_SETTINGS -> {
                 getString(R.string.settings)
             }
+        }
+    }
+
+    private fun configureNavigationView() {
+        val currentNavigationMenuItemId = when(viewModel.stateFlowMainFragment.value) {
+            MainFragmentState.FRAGMENT_SETTINGS -> {
+                R.id.menu_item_settings
+            }
+            MainFragmentState.FRAGMENT_NOTE_LIST -> {
+                R.id.menu_item_note_list
+            }
+            MainFragmentState.FRAGMENT_CATEGORY_LIST -> {
+                R.id.menu_item_category_list
+            }
+        }
+        binding.navigationViewMain.setCheckedItem(currentNavigationMenuItemId)
+        binding.navigationViewMain.setNavigationItemSelectedListener { menuItem ->
+            val mainFragmentState = when (menuItem.itemId) {
+                R.id.menu_item_note_list -> {
+                    MainFragmentState.FRAGMENT_NOTE_LIST
+                }
+
+                R.id.menu_item_category_list -> {
+                    MainFragmentState.FRAGMENT_CATEGORY_LIST
+                }
+
+                R.id.menu_item_settings -> {
+                    MainFragmentState.FRAGMENT_SETTINGS
+                }
+
+                else -> {
+                    MainFragmentState.FRAGMENT_NOTE_LIST
+                }
+            }
+            viewModel.setMainFragmentState(mainFragmentState)
+            binding.drawerMain.closeDrawer(GravityCompat.START)
+            true
         }
     }
 

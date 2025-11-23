@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="?attr/colorSecondary"
     android:layout_height="match_parent">
 
     <ImageButton
@@ -10,6 +11,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginEnd="10dp"
+        app:tint="?attr/colorOnSecondary"
         android:background="@android:color/transparent"
         android:contentDescription="@string/search"
         android:src="@drawable/ic_search"
@@ -21,7 +23,9 @@
         android:id="@+id/button_clear_filter_text"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        app:tint="?attr/colorOnSecondary"
         android:layout_marginStart="10dp"
+        android:background="@android:color/transparent"
         android:contentDescription="@string/clear_note_text_filter"
         android:src="@drawable/ic_clear"
         android:visibility="invisible"
@@ -30,6 +34,8 @@
         app:layout_constraintTop_toTopOf="@+id/edit_search_note" />
 
     <EditText
+        android:background="@drawable/background_edit_note_text"
+        android:padding="5dp"
         android:id="@+id/edit_search_note"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -58,7 +64,7 @@
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="10dp"
         android:text="@string/amount_notes"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnSecondary"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@+id/recycler_category_filter" />
 
@@ -76,6 +82,8 @@
         android:id="@+id/button_add_note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="?attr/colorPrimaryContainer"
+        app:tint="?attr/colorOnPrimaryContainer"
         android:layout_margin="10dp"
         android:contentDescription="@string/add"
         android:src="@drawable/ic_add"

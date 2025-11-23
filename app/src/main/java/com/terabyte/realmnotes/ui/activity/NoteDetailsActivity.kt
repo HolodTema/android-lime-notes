@@ -57,10 +57,11 @@ class NoteDetailsActivity : AppCompatActivity() {
             }
         }
 
+        setSupportActionBar(binding.toolbar)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.stateFlowNoteDetails.collect { state ->
-                    binding.toolbar.title = when (state) {
+                    supportActionBar?.title = when (state) {
                         NoteDetailsState.ADD_NOTE -> {
                             getString(R.string.note_details_header_insert)
                         }
@@ -116,7 +117,6 @@ class NoteDetailsActivity : AppCompatActivity() {
             }
         }
 
-        setSupportActionBar(binding.toolbar)
         configureOnBackPressed()
     }
 

@@ -156,7 +156,6 @@ class CategoryDetailsActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(onBackPressedCallback)
     }
 
-
     companion object {
         const val DIALOG_TAG_CHANGE_COLOR = "ChangeColorDialog"
 

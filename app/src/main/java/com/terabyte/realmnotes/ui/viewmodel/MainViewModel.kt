@@ -40,6 +40,11 @@ class MainViewModel(private val noteRepository: NoteRepository) : ViewModel() {
     val stateFlowNoteCategoryPairList: StateFlow<List<NoteCategoryPair>> =
         _stateFlowNoteCategoryPairList.asStateFlow()
 
+
+    private val _stateFLowCategoryFilterList = MutableStateFlow<List<Category>>(emptyList())
+    val stateFlowCategoryFilterList: StateFlow<List<Category>> = _stateFLowCategoryFilterList.asStateFlow()
+
+
     init {
         loadNotesAndCategories()
         configureFilterNotesByText()
@@ -53,10 +58,16 @@ class MainViewModel(private val noteRepository: NoteRepository) : ViewModel() {
                 val noteCategoryPairs =
                     NoteCategoryPairCreator.createNoteCategoryPairList(notes, categories)
 
+                var categoriesFilterList = categories
+                if (categoriesFilterList.isNotEmpty()) {
+                    categoriesFilterList = categories.plus(Category()).reversed()
+                }
+
                 withContext(Dispatchers.Main) {
                     noteCategoryPairList = noteCategoryPairs
                     _stateFlowCategoryList.value = categories
                     _stateFlowNoteCategoryPairList.value = noteCategoryPairs
+                    _stateFLowCategoryFilterList.value = categoriesFilterList
                 }
             }
         }

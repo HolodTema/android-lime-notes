@@ -14,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.terabyte.realmnotes.R
 import com.terabyte.realmnotes.databinding.FragmentNoteListBinding
 import com.terabyte.realmnotes.ui.activity.NoteDetailsActivity
+import com.terabyte.realmnotes.ui.recycler.CategoryFilterAdapter
 import com.terabyte.realmnotes.ui.recycler.NoteAdapter
 import com.terabyte.realmnotes.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
@@ -24,6 +25,8 @@ class NoteListFragment: Fragment() {
     private val viewModel: MainViewModel by activityViewModels()
 
     private lateinit var adapter: NoteAdapter
+
+    private lateinit var categoryFilterAdapter: CategoryFilterAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +42,9 @@ class NoteListFragment: Fragment() {
 
         binding.editSearchNote.setText(viewModel.stateFlowNoteFilterText.value)
 
+        categoryFilterAdapter = CategoryFilterAdapter(layoutInflater)
+        binding.recyclerCategoryFilter.adapter = categoryFilterAdapter
+
         return binding.root
     }
 
@@ -48,6 +54,14 @@ class NoteListFragment: Fragment() {
                 viewModel.stateFlowNoteCategoryPairList.collect {
                     adapter.submitList(it)
                     binding.textAmountNotes.text = getString(R.string.amount_notes, it.size)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.stateFlowCategoryFilterList.collect { categoriesFilterList ->
+                    categoryFilterAdapter.submitList(categoriesFilterList)
                 }
             }
         }

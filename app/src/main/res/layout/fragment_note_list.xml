@@ -41,6 +41,16 @@
         app:layout_constraintStart_toEndOf="@id/button_clear_filter_text"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:id="@+id/recycler_category_filter"
+        app:layout_constraintTop_toBottomOf="@id/edit_search_note"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/list_item_category_filter" />
+
     <TextView
         android:id="@+id/text_amount_notes"
         android:layout_width="match_parent"
@@ -50,7 +60,7 @@
         android:text="@string/amount_notes"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/edit_search_note" />
+        app:layout_constraintTop_toBottomOf="@+id/recycler_category_filter" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_notes"

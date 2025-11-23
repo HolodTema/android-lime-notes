@@ -14,8 +14,6 @@ import com.terabyte.realmnotes.databinding.DialogChangeColorBinding
 class ChangeColorDialog : DialogFragment() {
     private lateinit var binding: DialogChangeColorBinding
 
-    private lateinit var callbacks: Callbacks
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DialogChangeColorBinding.inflate(layoutInflater)
 
@@ -40,7 +38,7 @@ class ChangeColorDialog : DialogFragment() {
             indicator.setOnClickListener { clickedIndicator ->
                 val color = getBackgroundTintColor(clickedIndicator)
                 if (color != null) {
-                    callbacks.onColorSelected(color)
+                    setFragmentResult(color)
                 }
 
                 indicators.forEach { indicator ->
@@ -59,10 +57,6 @@ class ChangeColorDialog : DialogFragment() {
             .setView(binding.root)
             .setCancelable(true)
             .create()
-    }
-
-    fun setCallbacksImpl(callbacks: Callbacks) {
-        this.callbacks = callbacks
     }
 
     private fun getBackgroundTintColor(view: View): Int? {
@@ -93,12 +87,18 @@ class ChangeColorDialog : DialogFragment() {
         }
     }
 
-    interface Callbacks {
-        fun onColorSelected(color: Int)
+    private fun setFragmentResult(color: Int) {
+        val bundle = Bundle().apply {
+            putInt(BUNDLE_KEY_RESULT_COLOR, color)
+        }
+        parentFragmentManager.setFragmentResult(REQUEST_KEY_RESULT_COLOR, bundle)
     }
 
     companion object {
-        const val BUNDLE_KEY_START_COLOR = "bundleKeyStartColor"
+        const val REQUEST_KEY_RESULT_COLOR = "requestKeyResultColor"
+        const val BUNDLE_KEY_RESULT_COLOR = "bundleKeyResultColor"
+
+        private const val BUNDLE_KEY_START_COLOR = "bundleKeyStartColor"
 
         fun newInstance(startColor: Int): ChangeColorDialog {
             val bundle = Bundle()

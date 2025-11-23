@@ -10,7 +10,6 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -25,7 +24,7 @@ import com.terabyte.realmnotes.ui.viewmodel.CategoryDetailsState
 import com.terabyte.realmnotes.ui.viewmodel.CategoryDetailsViewModel
 import kotlinx.coroutines.launch
 
-class CategoryDetailsActivity : AppCompatActivity(), ChangeColorDialog.Callbacks {
+class CategoryDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCategoryDetailsBinding
 
     private val viewModel: CategoryDetailsViewModel by lazy {
@@ -89,20 +88,20 @@ class CategoryDetailsActivity : AppCompatActivity(), ChangeColorDialog.Callbacks
         }
 
         binding.buttonChangeColor.setOnClickListener {
-            val dialog = ChangeColorDialog()
-            dialog.setCallbacksImpl(this)
+            val dialog = ChangeColorDialog.newInstance(viewModel.stateFlowCategory.value.color)
             dialog.show(supportFragmentManager, DIALOG_TAG_CHANGE_COLOR)
         }
 
-        binding.editCategoryName.addTextChangedListener(object: TextWatcher {
-            override fun afterTextChanged(s: Editable?) { }
+        binding.editCategoryName.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
 
             override fun beforeTextChanged(
                 s: CharSequence?,
                 start: Int,
                 count: Int,
                 after: Int
-            ) { }
+            ) {
+            }
 
             override fun onTextChanged(
                 s: CharSequence?,
@@ -113,6 +112,17 @@ class CategoryDetailsActivity : AppCompatActivity(), ChangeColorDialog.Callbacks
                 viewModel.updateCategoryName(s.toString())
             }
         })
+
+        supportFragmentManager.setFragmentResultListener(
+            ChangeColorDialog.REQUEST_KEY_RESULT_COLOR,
+            this
+        ) { _, bundle ->
+            if (bundle.containsKey(ChangeColorDialog.BUNDLE_KEY_RESULT_COLOR)) {
+                val resultColor = bundle.getInt(ChangeColorDialog.BUNDLE_KEY_RESULT_COLOR)
+                viewModel.updateCategoryColor(resultColor)
+                binding.imageCategoryIcon.imageTintList = ColorStateList.valueOf(resultColor)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -133,11 +143,6 @@ class CategoryDetailsActivity : AppCompatActivity(), ChangeColorDialog.Callbacks
         }
 
         return false
-    }
-
-    override fun onColorSelected(color: Int) {
-        viewModel.updateCategoryColor(color)
-        binding.imageCategoryIcon.imageTintList = ColorStateList.valueOf(color)
     }
 
     private fun configureOnBackPressed() {

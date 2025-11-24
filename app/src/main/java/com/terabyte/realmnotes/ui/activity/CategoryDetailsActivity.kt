@@ -84,7 +84,8 @@ class CategoryDetailsActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        binding.toolbar.setNavigationOnClickListener {
+        binding.toolbar.setNavigationOnClickListener { it ->
+            it.isEnabled = false
             viewModel.saveCategory {
                 startActivity(MainActivity.newIntent(this))
             }
@@ -126,6 +127,15 @@ class CategoryDetailsActivity : AppCompatActivity() {
                 binding.imageCategoryIcon.imageTintList = ColorStateList.valueOf(resultColor)
             }
         }
+
+        supportFragmentManager.setFragmentResultListener(
+            DeleteCategoryDialog.REQUEST_KEY_DELETE_CATEGORY,
+            this
+        ) { _, _ ->
+            viewModel.deleteCategory {
+                startActivity(MainActivity.newIntent(this))
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -158,15 +168,6 @@ class CategoryDetailsActivity : AppCompatActivity() {
     }
 
     private fun showDeleteCategoryDialog() {
-        supportFragmentManager.setFragmentResultListener(
-            DeleteCategoryDialog.REQUEST_KEY_DELETE_CATEGORY,
-            this
-        ) { _, _ ->
-            viewModel.deleteCategory {
-                startActivity(MainActivity.newIntent(this))
-            }
-        }
-
         val dialog = DeleteCategoryDialog.newInstance()
         dialog.show(supportFragmentManager, null)
     }

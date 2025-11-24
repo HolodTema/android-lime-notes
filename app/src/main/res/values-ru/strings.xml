@@ -45,4 +45,8 @@
     <string name="app_version">Версия %s</string>
     <string name="created_at">Дата создания: %s"</string>
 
+    <string name="dialog_delete_note_title">Удалить эту заметку?</string>
+    <string name="dialog_delete_category_title">Удалить эту категорию?</string>
+    <string name="dialog_delete_category_msg">Заметки, принадлежащие этой категории, удалены не будут.</string>
+
 </resources>

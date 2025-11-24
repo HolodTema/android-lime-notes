@@ -128,6 +128,7 @@ class NoteDetailsActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         binding.toolbar.setNavigationOnClickListener {
+            it.isEnabled = false
             viewModel.saveNote {
                 startActivity(MainActivity.newIntent(this))
             }
@@ -164,6 +165,15 @@ class NoteDetailsActivity : AppCompatActivity() {
             if (viewModel.stateFlowNote.value.text.isNotBlank()) {
                 copyNoteTextToClipboard()
                 Toast.makeText(this, getString(R.string.copied), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        supportFragmentManager.setFragmentResultListener(
+            DeleteNoteDialog.REQUEST_KEY_DELETE_NOTE,
+            this
+        ) { _, _ ->
+            viewModel.deleteNote {
+                startActivity(MainActivity.newIntent(this))
             }
         }
     }
@@ -211,15 +221,6 @@ class NoteDetailsActivity : AppCompatActivity() {
     }
 
     private fun showDeleteNoteDialog() {
-        supportFragmentManager.setFragmentResultListener(
-            DeleteNoteDialog.REQUEST_KEY_DELETE_NOTE,
-            this
-        ) { _, _ ->
-            viewModel.deleteNote {
-                startActivity(MainActivity.newIntent(this))
-            }
-        }
-
         val dialog = DeleteNoteDialog.newInstance()
         dialog.show(supportFragmentManager, DIALOG_TAG_DELETE_NOTE)
     }

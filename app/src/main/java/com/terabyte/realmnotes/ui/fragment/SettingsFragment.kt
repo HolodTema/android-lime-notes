@@ -66,28 +66,27 @@ class SettingsFragment : Fragment() {
         binding.buttonDeleteAllCategories.setOnClickListener {
             showDeleteAllCategoriesDialog()
         }
-    }
 
-    private fun showDeleteAllNotesDialog() {
-        parentFragmentManager.setFragmentResultListener(
-            DeleteAllNotesDialog.REQUEST_KEY_DELETE_ALL_NOTES,
-            viewLifecycleOwner
-        ) { _, _ ->
-            mainViewModel.deleteAllNotes()
-        }
-
-        val dialog = DeleteAllNotesDialog.newInstance()
-        dialog.show(parentFragmentManager, DIALOG_TAG_DELETE_ALL_NOTES)
-    }
-
-    private fun showDeleteAllCategoriesDialog() {
         parentFragmentManager.setFragmentResultListener(
             DeleteAllCategoriesDialog.REQUEST_KEY_DELETE_ALL_CATEGORIES,
             viewLifecycleOwner
         ) { _, _ ->
             mainViewModel.deleteAllCategories()
         }
+        parentFragmentManager.setFragmentResultListener(
+            DeleteAllNotesDialog.REQUEST_KEY_DELETE_ALL_NOTES,
+            viewLifecycleOwner
+        ) { _, _ ->
+            mainViewModel.deleteAllNotes()
+        }
+    }
 
+    private fun showDeleteAllNotesDialog() {
+        val dialog = DeleteAllNotesDialog.newInstance()
+        dialog.show(parentFragmentManager, DIALOG_TAG_DELETE_ALL_NOTES)
+    }
+
+    private fun showDeleteAllCategoriesDialog() {
         val dialog = DeleteAllCategoriesDialog.newInstance()
         dialog.show(parentFragmentManager, DIALOG_TAG_DELETE_ALL_CATEGORIES)
     }

@@ -11,6 +11,7 @@
         <item name="colorOnError">@color/onErrorLight</item>
         <item name="colorAccent">@color/accentLight</item>
         <item name="android:statusBarColor">@color/primaryContainerLight</item>
+        <item name="statusBarBackground">@color/primaryContainerLight</item>
     </style>
 
     <style name="Theme.RealmNotes" parent="Base.Theme.RealmNotes" />

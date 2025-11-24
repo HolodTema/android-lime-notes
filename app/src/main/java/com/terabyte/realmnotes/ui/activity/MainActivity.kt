@@ -101,6 +101,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configureNavigationView() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.navigationViewMain) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                view.paddingLeft,
+                systemBars.top,
+                view.paddingRight,
+                systemBars.bottom
+            )
+            insets
+        }
+
         val currentNavigationMenuItemId = when(viewModel.stateFlowMainFragment.value) {
             MainFragmentState.FRAGMENT_SETTINGS -> {
                 R.id.menu_item_settings
@@ -139,7 +150,9 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         fun newIntent(context: Context): Intent {
-            return Intent(context, MainActivity::class.java)
+            return Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
         }
     }
 }

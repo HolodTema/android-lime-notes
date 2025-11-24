@@ -41,10 +41,10 @@ class CategoryDetailsActivity : AppCompatActivity() {
         binding = ActivityCategoryDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val category = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        val category: Category? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getSerializableExtra(INTENT_KEY_CATEGORY, Category::class.java)
         } else {
-            intent.getSerializableExtra(INTENT_KEY_CATEGORY) as Category
+            intent.getSerializableExtra(INTENT_KEY_CATEGORY) as Category?
         }
         category?.let {
             if (viewModel.stateFlowCategoryDetails.value == CategoryDetailsState.ADD_CATEGORY) {

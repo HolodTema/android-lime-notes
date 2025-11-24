@@ -147,7 +147,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     app:cardCornerRadius="30dp"
+                    android:elevation="0dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@android:color/transparent"
                     app:layout_constraintEnd_toEndOf="parent"
+
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_about_app">
 

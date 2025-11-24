@@ -23,7 +23,10 @@ enum class MainFragmentState {
     FRAGMENT_SETTINGS
 }
 
-class MainViewModel(private val noteRepository: NoteRepository, private val dataStoreRepository: DataStoreRepository) : ViewModel() {
+class MainViewModel(
+    private val noteRepository: NoteRepository,
+    private val dataStoreRepository: DataStoreRepository
+) : ViewModel() {
     private val _stateFlowMainFragment = MutableStateFlow(MainFragmentState.FRAGMENT_NOTE_LIST)
     val stateFlowMainFragment: StateFlow<MainFragmentState> = _stateFlowMainFragment.asStateFlow()
 
@@ -44,11 +47,15 @@ class MainViewModel(private val noteRepository: NoteRepository, private val data
 
 
     private val _stateFLowCategoryFilterList = MutableStateFlow<List<Category>>(emptyList())
-    val stateFlowCategoryFilterList: StateFlow<List<Category>> = _stateFLowCategoryFilterList.asStateFlow()
+    val stateFlowCategoryFilterList: StateFlow<List<Category>> =
+        _stateFLowCategoryFilterList.asStateFlow()
+
+    private val _stateFlowFilterCategorySelectedPosition = MutableStateFlow<Int>(0)
+    val stateFlowFilterCategorySelectedPosition =
+        _stateFlowFilterCategorySelectedPosition.asStateFlow()
 
     init {
         loadNotesAndCategories()
-        configureFilterNotesByText()
         setUITheme()
     }
 
@@ -70,6 +77,8 @@ class MainViewModel(private val noteRepository: NoteRepository, private val data
                     _stateFlowCategoryList.value = categories
                     _stateFlowNoteCategoryPairList.value = noteCategoryPairs
                     _stateFLowCategoryFilterList.value = categoriesFilterList
+                    configureFilterNotesByText()
+                    configureFilterNotesByCategory()
                 }
             }
         }
@@ -106,16 +115,33 @@ class MainViewModel(private val noteRepository: NoteRepository, private val data
     private fun configureFilterNotesByText() {
         viewModelScope.launch {
             stateFlowNoteFilterText.collect { text ->
-                if (text.isBlank()) {
-                    _stateFlowNoteCategoryPairList.value = noteCategoryPairList
-                } else {
-                    val deferred = async(Dispatchers.Default) {
-                        NoteCategoryPairCreator.filterByNoteText(text, noteCategoryPairList)
-                    }
-                    _stateFlowNoteCategoryPairList.value = deferred.await()
+                val categoryPosition = stateFlowFilterCategorySelectedPosition.value
+                val category = stateFlowCategoryFilterList.value.getOrNull(categoryPosition)
+
+                val deferred = async(Dispatchers.Default) {
+                    NoteCategoryPairCreator.filterByTextAndCategoryId(text, category?.id, noteCategoryPairList)
                 }
+                _stateFlowNoteCategoryPairList.value = deferred.await()
             }
         }
+    }
+
+    private fun configureFilterNotesByCategory() {
+        viewModelScope.launch {
+            stateFlowFilterCategorySelectedPosition.collect { categoryPosition ->
+                val category = stateFlowCategoryFilterList.value.getOrNull(categoryPosition)
+                val filterText = stateFlowNoteFilterText.value
+
+                val deferred = async(Dispatchers.Default) {
+                    NoteCategoryPairCreator.filterByTextAndCategoryId(filterText, category?.id, noteCategoryPairList)
+                }
+                _stateFlowNoteCategoryPairList.value = deferred.await()
+            }
+        }
+    }
+
+    fun setFilterCategorySelectedPosition(position: Int) {
+        _stateFlowFilterCategorySelectedPosition.value = position
     }
 
     fun setUITheme() {
@@ -132,7 +158,10 @@ class MainViewModel(private val noteRepository: NoteRepository, private val data
     }
 
     @Suppress("UNCHECKED_CAST")
-    class Factory(private val noteRepository: NoteRepository, private val dataStoreRepository: DataStoreRepository) : ViewModelProvider.Factory {
+    class Factory(
+        private val noteRepository: NoteRepository,
+        private val dataStoreRepository: DataStoreRepository
+    ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return MainViewModel(noteRepository, dataStoreRepository) as T

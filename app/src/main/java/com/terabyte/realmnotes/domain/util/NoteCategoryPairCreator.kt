@@ -27,4 +27,24 @@ object NoteCategoryPairCreator {
         }
     }
 
+    suspend fun filterByCategoryId(categoryId: String, noteCategoryPairs: List<NoteCategoryPair>): List<NoteCategoryPair> {
+        return noteCategoryPairs.filter { pair ->
+            pair.note.categoryId == categoryId
+        }
+    }
+
+    suspend fun filterByTextAndCategoryId(text: String, categoryId: String?, noteCategoryPairs: List<NoteCategoryPair>): List<NoteCategoryPair> {
+        return if (categoryId == null) {
+            noteCategoryPairs.filter { pair ->
+                pair.note.text.contains(text, ignoreCase = true)
+            }
+        }
+        else {
+            noteCategoryPairs.filter { pair ->
+                pair.note.text.contains(text, ignoreCase = true) && (pair.note.categoryId == categoryId)
+            }
+        }
+
+    }
+
 }

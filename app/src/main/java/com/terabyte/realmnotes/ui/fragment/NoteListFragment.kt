@@ -1,16 +1,22 @@
 package com.terabyte.realmnotes.ui.fragment
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
+import androidx.core.graphics.toColorLong
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.terabyte.realmnotes.LOG_TAG_DEBUG
 import com.terabyte.realmnotes.R
 import com.terabyte.realmnotes.databinding.FragmentNoteListBinding
 import com.terabyte.realmnotes.ui.activity.NoteDetailsActivity
@@ -19,14 +25,13 @@ import com.terabyte.realmnotes.ui.recycler.NoteAdapter
 import com.terabyte.realmnotes.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
-class NoteListFragment: Fragment() {
+
+class NoteListFragment : Fragment() {
     private lateinit var binding: FragmentNoteListBinding
 
     private val viewModel: MainViewModel by activityViewModels()
 
     private lateinit var adapter: NoteAdapter
-
-    private lateinit var categoryFilterAdapter: CategoryFilterAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,9 +46,6 @@ class NoteListFragment: Fragment() {
         binding.recyclerNotes.adapter = adapter
 
         binding.editSearchNote.setText(viewModel.stateFlowNoteFilterText.value)
-
-        categoryFilterAdapter = CategoryFilterAdapter(layoutInflater)
-        binding.recyclerCategoryFilter.adapter = categoryFilterAdapter
 
         return binding.root
     }
@@ -60,8 +62,32 @@ class NoteListFragment: Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.stateFlowCategoryFilterList.collect { categoriesFilterList ->
-                    categoryFilterAdapter.submitList(categoriesFilterList)
+                viewModel.stateFlowCategoryFilterList.collect { categories ->
+                    val startSelectedPosition =
+                        viewModel.stateFlowFilterCategorySelectedPosition.value
+
+                    binding.recyclerCategoryFilter.adapter = CategoryFilterAdapter(
+                        layoutInflater,
+                        categories,
+                        startSelectedPosition,
+                        isDarkMode()
+                    ) { selectedPosition ->
+                        viewModel.setFilterCategorySelectedPosition(selectedPosition)
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.stateFlowFilterCategorySelectedPosition.collect { categoryPosition ->
+                    val buttonClearIsVisible =
+                        (categoryPosition != 0) || binding.editSearchNote.text.isNotBlank()
+                    binding.buttonClearFilterText.visibility = if (buttonClearIsVisible) {
+                        View.VISIBLE
+                    } else {
+                        View.INVISIBLE
+                    }
                 }
             }
         }
@@ -73,7 +99,7 @@ class NoteListFragment: Fragment() {
             startActivity(NoteDetailsActivity.newIntent(requireActivity()))
         }
 
-        binding.editSearchNote.addTextChangedListener(object: TextWatcher {
+        binding.editSearchNote.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(
                 s: CharSequence?,
                 start: Int,
@@ -81,11 +107,13 @@ class NoteListFragment: Fragment() {
                 count: Int
             ) {
                 viewModel.setNoteFilterText(s.toString())
-                binding.buttonClearFilterText.visibility = if (s.toString().isBlank()) {
-                    View.INVISIBLE
-                }
-                else {
+
+                val buttonClearIsVisible = s.toString()
+                    .isNotBlank() || (viewModel.stateFlowFilterCategorySelectedPosition.value != 0)
+                binding.buttonClearFilterText.visibility = if (buttonClearIsVisible) {
                     View.VISIBLE
+                } else {
+                    View.INVISIBLE
                 }
             }
 
@@ -94,15 +122,28 @@ class NoteListFragment: Fragment() {
                 start: Int,
                 count: Int,
                 after: Int
-            ) { }
+            ) {
+            }
 
-            override fun afterTextChanged(s: Editable?) { }
+            override fun afterTextChanged(s: Editable?) {}
         })
 
         binding.buttonClearFilterText.setOnClickListener {
             binding.editSearchNote.setText("")
             viewModel.setNoteFilterText("")
+
+            val adapter = (binding.recyclerCategoryFilter.adapter as CategoryFilterAdapter?)
+            adapter?.let {
+                viewModel.setFilterCategorySelectedPosition(0)
+                it.resetSelectedPositionToZero()
+            }
         }
+    }
+
+    private fun isDarkMode(): Boolean {
+        val nightModeFlags =
+            requireContext().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
     }
 
     companion object {

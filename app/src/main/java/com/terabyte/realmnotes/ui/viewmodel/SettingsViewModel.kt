@@ -16,7 +16,6 @@ class SettingsViewModel(private val dataStoreRepository: DataStoreRepository): V
         }
     }
 
-
     @Suppress("UNCHECKED_CAST")
     class Factory(private val dataStoreRepository: DataStoreRepository): ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

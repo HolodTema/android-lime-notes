@@ -25,6 +25,7 @@
     <color name="colorErrorLight">#F44336</color>
     <color name="onErrorLight">#FFFFFF</color>
     <color name="accentLight">#2B712F</color>
+    <color name="categoryFilterSelectedLight">#004B56</color>
 
 
     <color name="primaryDark">#1d1d1d</color>

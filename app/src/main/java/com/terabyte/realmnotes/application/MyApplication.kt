@@ -6,22 +6,25 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.terabyte.realmnotes.data.local.datastore.DataStoreRepositoryImpl
 import com.terabyte.realmnotes.data.local.realm.NoteRepositoryImpl
+import com.terabyte.realmnotes.di.component.AppComponent
+import com.terabyte.realmnotes.di.component.DaggerAppComponent
 import com.terabyte.realmnotes.domain.repository.DataStoreRepository
 import com.terabyte.realmnotes.domain.repository.NoteRepository
+import javax.inject.Inject
 
 class MyApplication: Application() {
-    private val dataStore: DataStore<Preferences> by preferencesDataStore(DataStoreRepositoryImpl.DATA_STORE_NAME)
 
-    val dataStoreRepository: DataStoreRepository by lazy {
-        DataStoreRepositoryImpl.getInstance(dataStore)
+    lateinit var appComponent: AppComponent
+
+
+    override fun onCreate() {
+        super.onCreate()
+        appComponent = DaggerAppComponent.factory().create(this)
     }
 
-    val noteRepository: NoteRepository by lazy {
-        NoteRepositoryImpl()
-    }
 
     override fun onTerminate() {
         super.onTerminate()
-        noteRepository.close()
+        appComponent.noteRepository().close()
     }
 }

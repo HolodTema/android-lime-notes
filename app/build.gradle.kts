@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.realm)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -40,6 +41,10 @@ android {
 }
 
 dependencies {
+    //dagger
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
+
     //for activityViewModels() delegate using
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.fragment.ktx)

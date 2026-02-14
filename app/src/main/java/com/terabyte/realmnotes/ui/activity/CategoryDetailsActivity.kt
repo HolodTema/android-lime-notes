@@ -19,24 +19,37 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.terabyte.realmnotes.R
 import com.terabyte.realmnotes.application.MyApplication
 import com.terabyte.realmnotes.databinding.ActivityCategoryDetailsBinding
+import com.terabyte.realmnotes.di.component.ActivityComponent
 import com.terabyte.realmnotes.domain.model.Category
 import com.terabyte.realmnotes.ui.dialog.ChangeColorDialog
 import com.terabyte.realmnotes.ui.dialog.DeleteCategoryDialog
 import com.terabyte.realmnotes.ui.viewmodel.CategoryDetailsState
 import com.terabyte.realmnotes.ui.viewmodel.CategoryDetailsViewModel
+import com.terabyte.realmnotes.ui.viewmodel.ViewModelFactory
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class CategoryDetailsActivity : AppCompatActivity() {
+
+    lateinit var activityComponent: ActivityComponent
+
     private lateinit var binding: ActivityCategoryDetailsBinding
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private val viewModel: CategoryDetailsViewModel by lazy {
-        val noteRepository = (application as MyApplication).noteRepository
-        val factory = CategoryDetailsViewModel.Factory(noteRepository)
-        ViewModelProvider(this, factory)[CategoryDetailsViewModel::class]
+        ViewModelProvider(this, viewModelFactory)[CategoryDetailsViewModel::class]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        activityComponent = (application as MyApplication)
+            .appComponent
+            .activityComponentFactory()
+            .create()
+        activityComponent.inject(this)
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         binding = ActivityCategoryDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)

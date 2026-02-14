@@ -22,27 +22,41 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.terabyte.realmnotes.R
 import com.terabyte.realmnotes.application.MyApplication
+import com.terabyte.realmnotes.databinding.ActivityMainBinding
 import com.terabyte.realmnotes.databinding.ActivityNoteDetailsBinding
+import com.terabyte.realmnotes.di.component.ActivityComponent
 import com.terabyte.realmnotes.domain.model.Note
 import com.terabyte.realmnotes.ui.dialog.DeleteNoteDialog
 import com.terabyte.realmnotes.ui.spinner.SpinnerCategoryAdapter
 import com.terabyte.realmnotes.ui.viewmodel.NoteDetailsState
 import com.terabyte.realmnotes.ui.viewmodel.NoteDetailsViewModel
+import com.terabyte.realmnotes.ui.viewmodel.ViewModelFactory
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
+import javax.inject.Inject
 
 class NoteDetailsActivity : AppCompatActivity() {
+
+    lateinit var activityComponent: ActivityComponent
+
     private lateinit var binding: ActivityNoteDetailsBinding
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private val viewModel: NoteDetailsViewModel by lazy {
-        val noteRepository = (application as MyApplication).noteRepository
-        val factory = NoteDetailsViewModel.Factory(noteRepository)
-        ViewModelProvider(this, factory)[NoteDetailsViewModel::class]
+        ViewModelProvider(this, viewModelFactory)[NoteDetailsViewModel::class]
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        activityComponent = (application as MyApplication).appComponent
+            .activityComponentFactory()
+            .create()
+        activityComponent.inject(this)
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         binding = ActivityNoteDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -59,6 +73,7 @@ class NoteDetailsActivity : AppCompatActivity() {
         }
 
         setSupportActionBar(binding.toolbar)
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.stateFlowNoteDetails.collect { state ->
@@ -92,7 +107,7 @@ class NoteDetailsActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.stateFlowCategoryList.collect { categories ->
                     binding.spinnerNoteCategory.adapter =
-                        SpinnerCategoryAdapter(this@NoteDetailsActivity, layoutInflater, categories)
+                        SpinnerCategoryAdapter(this@NoteDetailsActivity, categories)
                     val categorySelected =
                         categories.find { it.id == viewModel.stateFlowNote.value.categoryId }
                     if (categorySelected == null) {

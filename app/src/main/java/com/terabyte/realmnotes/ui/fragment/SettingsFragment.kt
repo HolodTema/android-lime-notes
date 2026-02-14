@@ -1,6 +1,6 @@
 package com.terabyte.realmnotes.ui.fragment
 
-import android.app.AlertDialog
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,22 +15,42 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.terabyte.realmnotes.R
 import com.terabyte.realmnotes.application.MyApplication
 import com.terabyte.realmnotes.databinding.FragmentSettingsBinding
+import com.terabyte.realmnotes.di.component.FragmentComponent
+import com.terabyte.realmnotes.ui.activity.MainActivity
 import com.terabyte.realmnotes.ui.dialog.DeleteAllCategoriesDialog
 import com.terabyte.realmnotes.ui.dialog.DeleteAllNotesDialog
 import com.terabyte.realmnotes.ui.viewmodel.MainViewModel
 import com.terabyte.realmnotes.ui.viewmodel.SettingsViewModel
+import com.terabyte.realmnotes.ui.viewmodel.ViewModelFactory
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class SettingsFragment : Fragment() {
+
+    lateinit var fragmentComponent: FragmentComponent
+
     private lateinit var binding: FragmentSettingsBinding
 
-    private val viewModel: SettingsViewModel by lazy {
-        val application = (requireContext().applicationContext) as MyApplication
-        val factory = SettingsViewModel.Factory(application.dataStoreRepository)
-        ViewModelProvider(this, factory)[SettingsViewModel::class]
-    }
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
+    private val viewModel: SettingsViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[SettingsViewModel::class]
+    }
+    //we could write the same thing:
+    //private val viewModel: SettingsViewModel by viewModels { viewModelFactory }
+
+
+    //yes, it is working with ViewModel-DI. Because of MainViewModel will be in Activity-ViewModelStore
     private val mainViewModel: MainViewModel by activityViewModels()
+
+    override fun onAttach(context: Context) {
+        fragmentComponent = (requireActivity() as MainActivity)
+            .activityComponent
+            .fragmentComponentFactory().create()
+        fragmentComponent.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 enum class MainFragmentState {
     FRAGMENT_NOTE_LIST,
@@ -23,7 +24,7 @@ enum class MainFragmentState {
     FRAGMENT_SETTINGS
 }
 
-class MainViewModel(
+class MainViewModel @Inject constructor(
     private val noteRepository: NoteRepository,
     private val dataStoreRepository: DataStoreRepository
 ) : ViewModel() {
@@ -119,7 +120,11 @@ class MainViewModel(
                 val category = stateFlowCategoryFilterList.value.getOrNull(categoryPosition)
 
                 val deferred = async(Dispatchers.Default) {
-                    NoteCategoryPairCreator.filterByTextAndCategoryId(text, category?.id, noteCategoryPairList)
+                    NoteCategoryPairCreator.filterByTextAndCategoryId(
+                        text,
+                        category?.id,
+                        noteCategoryPairList
+                    )
                 }
                 _stateFlowNoteCategoryPairList.value = deferred.await()
             }
@@ -133,7 +138,11 @@ class MainViewModel(
                 val filterText = stateFlowNoteFilterText.value
 
                 val deferred = async(Dispatchers.Default) {
-                    NoteCategoryPairCreator.filterByTextAndCategoryId(filterText, category?.id, noteCategoryPairList)
+                    NoteCategoryPairCreator.filterByTextAndCategoryId(
+                        filterText,
+                        category?.id,
+                        noteCategoryPairList
+                    )
                 }
                 _stateFlowNoteCategoryPairList.value = deferred.await()
             }
@@ -155,17 +164,5 @@ class MainViewModel(
                 AppCompatDelegate.setDefaultNightMode(themeMode)
             }
         }
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    class Factory(
-        private val noteRepository: NoteRepository,
-        private val dataStoreRepository: DataStoreRepository
-    ) : ViewModelProvider.Factory {
-
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return MainViewModel(noteRepository, dataStoreRepository) as T
-        }
-
     }
 }

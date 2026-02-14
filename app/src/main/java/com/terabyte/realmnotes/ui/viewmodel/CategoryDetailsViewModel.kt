@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 enum class CategoryDetailsState {
@@ -18,7 +19,7 @@ enum class CategoryDetailsState {
     UPDATE_CATEGORY
 }
 
-class CategoryDetailsViewModel(private val noteRepository: NoteRepository) : ViewModel() {
+class CategoryDetailsViewModel @Inject constructor(private val noteRepository: NoteRepository) : ViewModel() {
 
     private val _stateFlowCategory = MutableStateFlow(Category())
     val stateFlowCategory: StateFlow<Category> = _stateFlowCategory.asStateFlow()
@@ -74,14 +75,5 @@ class CategoryDetailsViewModel(private val noteRepository: NoteRepository) : Vie
 
     fun updateCategoryColor(color: Int) {
         _stateFlowCategory.value.color = color
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    class Factory(private val noteRepository: NoteRepository) : ViewModelProvider.Factory {
-
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return CategoryDetailsViewModel(noteRepository) as T
-        }
-
     }
 }

@@ -14,13 +14,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 enum class NoteDetailsState {
     ADD_NOTE,
     UPDATE_NOTE
 }
 
-class NoteDetailsViewModel(private val noteRepository: NoteRepository): ViewModel() {
+class NoteDetailsViewModel @Inject constructor(private val noteRepository: NoteRepository): ViewModel() {
     private val _stateFlowNote = MutableStateFlow(Note())
     val stateFlowNote: StateFlow<Note> = _stateFlowNote.asStateFlow()
 
@@ -93,12 +94,4 @@ class NoteDetailsViewModel(private val noteRepository: NoteRepository): ViewMode
         _stateFlowNote.value.categoryId = categoryId
     }
 
-    @Suppress("UNCHECKED_CAST")
-    class Factory(private val noteRepository: NoteRepository): ViewModelProvider.Factory {
-
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return NoteDetailsViewModel(noteRepository) as T
-        }
-
-    }
 }

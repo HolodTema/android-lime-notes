@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -16,25 +15,35 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.terabyte.realmnotes.R
 import com.terabyte.realmnotes.application.MyApplication
 import com.terabyte.realmnotes.databinding.ActivityMainBinding
+import com.terabyte.realmnotes.di.component.ActivityComponent
 import com.terabyte.realmnotes.ui.fragment.CategoryListFragment
 import com.terabyte.realmnotes.ui.fragment.NoteListFragment
 import com.terabyte.realmnotes.ui.fragment.SettingsFragment
 import com.terabyte.realmnotes.ui.viewmodel.MainFragmentState
 import com.terabyte.realmnotes.ui.viewmodel.MainViewModel
+import com.terabyte.realmnotes.ui.viewmodel.ViewModelFactory
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
+
+    lateinit var activityComponent: ActivityComponent
+
     private lateinit var binding: ActivityMainBinding
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private val viewModel: MainViewModel by lazy {
-        val noteRepository = (application as MyApplication).noteRepository
-        val dataStoreRepository = (application as MyApplication).dataStoreRepository
-        val factory = MainViewModel.Factory(noteRepository, dataStoreRepository)
-        ViewModelProvider(this, factory)[MainViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        activityComponent = (application as MyApplication).appComponent
+            .activityComponentFactory().create()
+        activityComponent.inject(this)
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

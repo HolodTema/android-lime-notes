@@ -12,10 +12,8 @@ import com.terabyte.realmnotes.domain.model.Category
 
 class SpinnerCategoryAdapter(
     private val context: Context,
-    private val inflater: LayoutInflater,
     private val categories: List<Category>,
-) :
-    ArrayAdapter<Category>(context, 0, categories) {
+) : ArrayAdapter<Category>(context, 0, categories) {
 
     override fun getDropDownView(
         position: Int,
@@ -34,19 +32,18 @@ class SpinnerCategoryAdapter(
     }
 
     private fun initView(position: Int, parent: ViewGroup): View {
-        val binding = SpinnerItemCategoryBinding.inflate(inflater, parent, false)
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding = SpinnerItemCategoryBinding.inflate(layoutInflater, parent, false)
         val category = categories[position]
 
         if (category.id == null) {
             binding.textCategoryName.text = context.getString(R.string.no_category)
             binding.textCategoryName.setCompoundDrawables(null, null, null, null)
-        }
-        else {
+        } else {
             binding.textCategoryName.text = category.name
-            binding.textCategoryName.compoundDrawableTintList = ColorStateList.valueOf(category.color)
+            binding.textCategoryName.compoundDrawableTintList =
+                ColorStateList.valueOf(category.color)
         }
-
-
         return binding.root
     }
 }

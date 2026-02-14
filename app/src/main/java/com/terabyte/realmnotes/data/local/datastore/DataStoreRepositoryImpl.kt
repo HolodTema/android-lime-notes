@@ -7,8 +7,11 @@ import androidx.datastore.preferences.core.edit
 import com.terabyte.realmnotes.domain.repository.DataStoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class DataStoreRepositoryImpl private constructor(private val dataStore: DataStore<Preferences>) :
+@Singleton
+class DataStoreRepositoryImpl @Inject constructor(private val dataStore: DataStore<Preferences>) :
     DataStoreRepository {
 
     override val isDarkTheme: Flow<Boolean> = dataStore.data.map { preferences ->
@@ -25,15 +28,5 @@ class DataStoreRepositoryImpl private constructor(private val dataStore: DataSto
         const val DATA_STORE_NAME = "PreferencesDataStore"
 
         private val KEY_IS_DARK_THEME = booleanPreferencesKey("keyIsDarkTheme")
-
-        private lateinit var instance: DataStoreRepositoryImpl
-
-        fun getInstance(dataStore: DataStore<Preferences>): DataStoreRepositoryImpl {
-            if (::instance.isInitialized) {
-                return instance
-            }
-            instance = DataStoreRepositoryImpl(dataStore)
-            return instance
-        }
     }
 }
